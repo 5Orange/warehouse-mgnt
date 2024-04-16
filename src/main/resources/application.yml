@@ -1,0 +1,15 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 5
+    url: jdbc:postgresql://localhost:5432/mydb
+    username: datvu
+    password: asdasd
+security:
+  jwt:
+    secretKey: aosiduoqjsd98quwjdoijasd
+    expireTime: 3600000 #~1h ~ mili second
