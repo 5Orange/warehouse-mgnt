@@ -2,14 +2,20 @@ package com.mgnt.warehouse.modal.auth;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import org.springframework.security.authentication.AuthenticationProvider;
+import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Data
+@Table(name = "users")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,7 +31,7 @@ public class User {
 
     @Email(message = "Email Invalid, please try again.")
     private String email;
-    private Long phoneNumber;
+    private String phoneNumber;
 
     @NotEmpty(message = "Full name must not be empty")
     private String fullName;
@@ -35,21 +41,6 @@ public class User {
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
+    private Set<Role> roles;
 
-    @Enumerated(EnumType.STRING)
-    private AuthenticationProvider authProvider;
-
-    public User() {
-    }
-
-    public User(String username, String password, @Email(message = "Email Invalid, please try again.") String email,
-                Long phoneNumber, String fullName, String address) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.fullName = fullName;
-        this.address = address;
-    }
 }

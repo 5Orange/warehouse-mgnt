@@ -1,4 +1,4 @@
-package com.mgnt.warehouse.service.impl;
+package com.mgnt.warehouse.security.service;
 
 import com.mgnt.warehouse.modal.auth.UserPrinciple;
 import io.jsonwebtoken.*;
@@ -18,7 +18,7 @@ public class JwtService {
     @Value("${security.jwt.secret-key}")
     private String jwtSecret;
 
-    @Value("${security.jwt.secret-key}")
+    @Value("${security.jwt.expire-time}")
     private long jwtExpiration;
 
     public String generateJwtToken(Authentication authentication) {

@@ -1,4 +1,4 @@
-package com.mgnt.warehouse.application.config.auth;
+package com.mgnt.warehouse.security.jwt;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

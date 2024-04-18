@@ -1,10 +1,9 @@
-package com.mgnt.warehouse.modal.auth;
+package com.mgnt.warehouse.modal.request;
 
 import lombok.Getter;
 
 @Getter
-public class LoginDto {
-
+public class LoginRequest {
     private String username;
     private String password;
 }

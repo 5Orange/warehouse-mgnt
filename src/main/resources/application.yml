@@ -13,3 +13,6 @@ security:
   jwt:
     secretKey: aosiduoqjsd98quwjdoijasd
     expireTime: 3600000 #~1h ~ mili second
+springdoc:
+  api-docs:
+    path: '/api-docs'

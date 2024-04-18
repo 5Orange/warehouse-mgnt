@@ -1,16 +1,25 @@
 package com.mgnt.warehouse.modal.auth;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import lombok.Getter;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Objects;
 
-@Getter
+@Data
+@Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Role implements GrantedAuthority {
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    private long id;
+
     @Enumerated(EnumType.STRING)
     @NaturalId
     @Column(length = 60)

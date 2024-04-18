@@ -1,6 +1,8 @@
-package com.mgnt.warehouse.application.config.auth;
+package com.mgnt.warehouse.security;
 
-import com.mgnt.warehouse.service.impl.UserServiceImpl;
+import com.mgnt.warehouse.security.jwt.JwtEntryPoint;
+import com.mgnt.warehouse.security.jwt.JwtRequestFilter;
+import com.mgnt.warehouse.security.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
-public class AuthConfig {
+public class SecurityConfig {
 
     private final UserServiceImpl userService;
     private final JwtEntryPoint jwtEntryPoint;
@@ -44,18 +46,25 @@ public class AuthConfig {
     @Bean
     @SneakyThrows
     protected SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) {
-        return httpSecurity.csrf(AbstractHttpConfigurer::disable)
+        httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtEntryPoint))
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(request ->
-                        request.requestMatchers("/auth/*").permitAll()
-                        .requestMatchers("/user/*").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers("/admin/*").hasRole("ADMIN")
-                        .anyRequest().authenticated())
-                .build();
-
-
+                        request.requestMatchers(FREE_ACCESS).permitAll()
+                                .requestMatchers("/user/**").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                .anyRequest().authenticated());
+        httpSecurity.authenticationManager(authenticationManager());
+        httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        return httpSecurity.build();
     }
+
+    private static final String[] FREE_ACCESS = new String[] {
+            "/auth/**",
+            "/api-docs",
+            "/api-docs/**",
+            "/swagger-ui/**"
+    };
 }
