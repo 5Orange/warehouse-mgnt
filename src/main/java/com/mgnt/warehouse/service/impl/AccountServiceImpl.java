@@ -26,13 +26,12 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
 
+    private static final String ROLE_NOT_FOUND = "Error: Role is not found.";
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-
-    private static final String ROLE_NOT_FOUND = "Error: Role is not found.";
 
     @Override
     public ResponseEntity<?> createAccount(SignUpRequest signUpRequest) {

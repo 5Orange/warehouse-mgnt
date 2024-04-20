@@ -26,6 +26,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private static final String[] FREE_ACCESS = new String[]{
+            "/auth/**",
+            "/api-docs",
+            "/api-docs/**",
+            "/swagger-ui/**",
+            "/error"
+    };
     private final UserServiceImpl userService;
     private final JwtEntryPoint jwtEntryPoint;
     private final JwtRequestFilter jwtRequestFilter;
@@ -60,12 +67,4 @@ public class SecurityConfig {
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
-
-    private static final String[] FREE_ACCESS = new String[]{
-            "/auth/**",
-            "/api-docs",
-            "/api-docs/**",
-            "/swagger-ui/**",
-            "/error"
-    };
 }
