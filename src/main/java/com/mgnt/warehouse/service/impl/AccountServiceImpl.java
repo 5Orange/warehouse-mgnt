@@ -11,7 +11,6 @@ import com.mgnt.warehouse.repository.UserRepository;
 import com.mgnt.warehouse.security.service.JwtService;
 import com.mgnt.warehouse.service.AccountService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -45,6 +44,7 @@ public class AccountServiceImpl implements AccountService {
                 .username(signUpRequest.getUsername())
                 .password(passwordEncoder.encode(signUpRequest.getPassword()))
                 .address(signUpRequest.getAddress())
+                .email(signUpRequest.getEmail())
                 .phoneNumber(signUpRequest.getPhoneNumber())
                 .build();
 
@@ -57,18 +57,16 @@ public class AccountServiceImpl implements AccountService {
             roles.add(userRole);
         } else {
             strRoles.forEach(role -> {
-                switch (role) {
-                    case "admin"-> {
-                        Role adminRole = roleRepository.findByName(RoleConst.ROLE_ADMIN)
-                                .orElseThrow(() -> new RuntimeException(ROLE_NOT_FOUND));
-                        roles.add(adminRole);
-                    }
-                    default -> {
-                        Role userRole = roleRepository.findByName(RoleConst.ROLE_USER)
-                                .orElseThrow(() -> new RuntimeException(ROLE_NOT_FOUND));
-                        roles.add(userRole);
-                    }
-                }
+                var r = switch (role) {
+                    case "admin" -> roleRepository
+                            .findByName(RoleConst.ROLE_ADMIN)
+                            .orElseThrow(() -> new RuntimeException(ROLE_NOT_FOUND));
+                    default -> roleRepository
+                            .findByName(RoleConst.ROLE_USER)
+                            .orElseThrow(() -> new RuntimeException(ROLE_NOT_FOUND));
+                };
+                roles.add(r);
+
             });
         }
 
@@ -91,6 +89,6 @@ public class AccountServiceImpl implements AccountService {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtService.generateJwtToken(authentication);
-        return ResponseEntity.ok(LoginResponse.builder().token(jwt));
+        return ResponseEntity.ok().body(LoginResponse.builder().token(jwt).build());
     }
 }

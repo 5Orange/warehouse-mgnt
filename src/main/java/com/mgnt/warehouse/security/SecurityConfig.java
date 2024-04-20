@@ -61,10 +61,11 @@ public class SecurityConfig {
         return httpSecurity.build();
     }
 
-    private static final String[] FREE_ACCESS = new String[] {
+    private static final String[] FREE_ACCESS = new String[]{
             "/auth/**",
             "/api-docs",
             "/api-docs/**",
-            "/swagger-ui/**"
+            "/swagger-ui/**",
+            "/error"
     };
 }

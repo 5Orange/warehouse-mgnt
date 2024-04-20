@@ -13,13 +13,13 @@ import java.util.stream.Collectors;
 @Getter
 public class UserPrinciple implements UserDetails {
 
-    private Long id;
-    private String username;
+    private final Long id;
+    private final String username;
     @JsonIgnore
-    private String password;
-    private String email;
-    private String fullName;
-    private Collection<? extends GrantedAuthority> authorities;
+    private final String password;
+    private final String email;
+    private final String fullName;
+    private final Collection<? extends GrantedAuthority> authorities;
 
     public UserPrinciple(Long id, String username, String password, String email, String fullName, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
@@ -31,7 +31,9 @@ public class UserPrinciple implements UserDetails {
     }
 
     public static UserPrinciple build(User user) {
-        List<GrantedAuthority> authorities = user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName().name())).collect(Collectors.toList());
+        List<GrantedAuthority> authorities = user.getRoles()
+                .stream().map(role -> new SimpleGrantedAuthority(role.getName().name()))
+                .collect(Collectors.toList());
         return new UserPrinciple(
                 user.getId(),
                 user.getUsername(),
@@ -41,6 +43,7 @@ public class UserPrinciple implements UserDetails {
                 authorities
         );
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();

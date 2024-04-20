@@ -1,7 +1,8 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
+    show-sql: true
   datasource:
     hikari:
       connectionTimeout: 20000
@@ -11,7 +12,7 @@ spring:
     password: asdasd
 security:
   jwt:
-    secretKey: aosiduoqjsd98quwjdoijasd
+    secretKey: 7EW1jFa0kdBs0Uwa3WZMqEXZYG3k8vqc1NxOD2DqbxlUt59xxlIMSSrytnKKmk1gldchDE1hhESeEwoktI6JBsPMWOHsOBZcSPih0ChEkbqzax7thZY4dbcFeSyp9uGu
     expireTime: 3600000 #~1h ~ mili second
 springdoc:
   api-docs:

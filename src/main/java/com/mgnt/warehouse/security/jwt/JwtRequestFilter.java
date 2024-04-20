@@ -20,8 +20,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
-    private JwtService jwtService;
-    private UserServiceImpl userDetailServiceImpl;
+    private final JwtService jwtService;
+    private final UserServiceImpl userDetailServiceImpl;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
