@@ -38,20 +38,3 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 }
-//
-//dockerCompose {
-//	useComposeFiles =['src/main/docker/compose.yaml']
-//}
-//
-//tasks.register("startEnv") {
-//	exec {
-//		commandLine('./gradlew', 'composeUp')
-//	}
-//}
-//tasks.register("stopEnv") {
-//	exec {
-//		commandLine('./gradlew', 'composeDown')
-//	}
-//}
-//
-
