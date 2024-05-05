@@ -23,7 +23,7 @@ public class User extends BaseEntity {
 
     @NotNull
     @NotEmpty
-    @Size(min = 9, message = "The individual card number is required!")
+    @Size(min = 9, message = "The individual card number is required, min length is 9!")
     private String individualCard;
 
     @NotNull(message = "Password must not be null")

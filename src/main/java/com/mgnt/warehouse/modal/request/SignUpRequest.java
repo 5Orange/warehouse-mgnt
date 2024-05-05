@@ -15,6 +15,7 @@ public class SignUpRequest {
     private String phoneNumber;
     private String fullName;
     private String address;
+    private String individualCard;
 
     private Set<String> roles;
 }

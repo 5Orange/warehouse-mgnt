@@ -1,6 +1,6 @@
 package com.mgnt.warehouse.application;
 
-import com.mgnt.warehouse.modal.auth.User;
+import com.mgnt.warehouse.modal.auth.UserPrinciple;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -8,13 +8,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 
-public class SpringSecurityAuditorAware implements AuditorAware<User> {
+public class SpringSecurityAuditorAware implements AuditorAware<String> {
     @Override
-    public Optional<User> getCurrentAuditor() {
+    public Optional<String> getCurrentAuditor() {
         return Optional.ofNullable(SecurityContextHolder.getContext())
                 .map(SecurityContext::getAuthentication)
                 .filter(Authentication::isAuthenticated)
                 .map(Authentication::getPrincipal)
-                .map(User.class::cast);
+                .map(user -> {
+                    if (user instanceof UserPrinciple userPrinciple) {
+                        return userPrinciple.getUsername();
+                    }
+                    return "SYSTEM";
+                });
     }
 }

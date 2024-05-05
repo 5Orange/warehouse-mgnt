@@ -4,7 +4,7 @@ import com.mgnt.warehouse.modal.request.LoginRequest;
 import com.mgnt.warehouse.modal.request.SignUpRequest;
 import org.springframework.http.ResponseEntity;
 
-public interface AccountService {
+public interface IAccountService {
 
     ResponseEntity<?> createAccount(SignUpRequest request);
 

@@ -2,7 +2,7 @@ package com.mgnt.warehouse.controller;
 
 import com.mgnt.warehouse.modal.request.LoginRequest;
 import com.mgnt.warehouse.modal.request.SignUpRequest;
-import com.mgnt.warehouse.service.AccountService;
+import com.mgnt.warehouse.service.IAccountService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AccountService accountService;
-
+    private final IAccountService accountService;
 
     @PostMapping("signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {

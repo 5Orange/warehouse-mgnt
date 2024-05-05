@@ -17,3 +17,6 @@ security:
 springdoc:
   api-docs:
     path: '/api-docs'
+logging:
+  level:
+    root=INFO,ERROR,DEBUG:
