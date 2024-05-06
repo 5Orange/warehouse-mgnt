@@ -9,4 +9,9 @@ public class DuplicateException extends RuntimeException {
         super("Duplicate record!");
     }
 
+
+    public DuplicateException(String message) {
+        super(message);
+    }
+
 }

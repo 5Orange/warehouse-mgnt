@@ -1,6 +1,9 @@
 package com.mgnt.warehouse.modal;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 
@@ -8,11 +11,12 @@ import java.util.List;
 
 @Data
 @Entity
-public class Provider extends BaseEntity {
+public class Supplier extends BaseEntity {
     private String name;
     private String phone;
     private String address;
 
-    @OneToMany(mappedBy = "provider")
+    @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Product> products;
 }

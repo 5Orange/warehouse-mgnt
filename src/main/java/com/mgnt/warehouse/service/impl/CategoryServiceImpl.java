@@ -2,7 +2,7 @@ package com.mgnt.warehouse.service.impl;
 
 import com.mgnt.warehouse.modal.Category;
 import com.mgnt.warehouse.modal.exception.DuplicateException;
-import com.mgnt.warehouse.modal.exception.NotFoundException;
+import com.mgnt.warehouse.modal.exception.InvalidRequestException;
 import com.mgnt.warehouse.modal.mapper.CategoryMapper;
 import com.mgnt.warehouse.repository.CategoryRepository;
 import com.mgnt.warehouse.service.ICategoryService;
@@ -34,16 +34,21 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     public void update(Category category) {
-        Category root = categoryRepository.findCategoryById(category.getId());
-        if (root == null) {
-            throw new NotFoundException();
-        }
-
-        Optional.of(root)
+        categoryRepository.findCategoryById(category.getId())
                 .ifPresent(c -> {
                     Category target = categoryMapper.toCategory(category);
-                    target.setId(root.getId());
+                    target.setId(c.getId());
+                    target.setCreateDate(c.getCreateDate());
+                    target.setCreatedBy(c.getCreatedBy());
                     categoryRepository.save(target);
                 });
+    }
+
+    @Override
+    public Optional<Category> getCategoryById(Long id) {
+        if (id == null) {
+            throw new InvalidRequestException("Id can not be null!");
+        }
+        return categoryRepository.findCategoryById(id);
     }
 }
