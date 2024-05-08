@@ -1,6 +1,6 @@
 package com.mgnt.warehouse.modal;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
 import lombok.Data;
@@ -12,8 +12,8 @@ import lombok.EqualsAndHashCode;
 public class Quantity extends BaseEntity {
 
     @OneToOne
-    @JsonBackReference
+    @JsonIgnore
     private Product product;
 
-    private Long count;
+    private Long value;
 }

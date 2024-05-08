@@ -1,13 +1,13 @@
 package com.mgnt.warehouse.modal;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(exclude = {"quantity", "category", "supplier"}, callSuper = false)
 @Data
 @Entity
 public class Product extends BaseEntity {
@@ -17,16 +17,19 @@ public class Product extends BaseEntity {
 
     private BigDecimal price;
 
-    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @OneToOne(mappedBy = "product",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
     private Quantity quantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Supplier supplier;
 
 }

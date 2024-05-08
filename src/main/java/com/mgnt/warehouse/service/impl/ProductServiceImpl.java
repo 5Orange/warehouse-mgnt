@@ -51,7 +51,7 @@ public class ProductServiceImpl implements IProductService {
 
 
         Quantity quantity = new Quantity();
-        quantity.setCount(createProductRequest.getQuantity());
+        quantity.setValue(createProductRequest.getQuantity());
         quantityRepository.save(quantity);
         quantity.setProduct(product);
 

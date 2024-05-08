@@ -8,7 +8,7 @@ import jakarta.persistence.OneToMany;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -18,6 +18,6 @@ public class Category extends BaseEntity {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
-    private Set<Product> products;
+    private List<Product> products;
 
 }

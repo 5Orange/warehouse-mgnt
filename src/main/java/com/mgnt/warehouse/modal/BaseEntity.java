@@ -9,9 +9,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 
+@MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @Data
-@MappedSuperclass
 public class BaseEntity {
 
     @Id
