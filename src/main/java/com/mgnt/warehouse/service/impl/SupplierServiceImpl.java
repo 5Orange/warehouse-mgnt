@@ -9,7 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+
+import static com.mgnt.warehouse.service.ServiceUtils.generateSupplierCode;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +36,12 @@ public class SupplierServiceImpl implements ISupplierService {
         if (supplierRepository.existsByName(supplier.getName())) {
             throw new DuplicateException("Supplier is already existing!");
         }
+        supplier.setCode(generateSupplierCode());
         return supplierRepository.save(supplier).getId();
+    }
+
+    @Override
+    public List<Supplier> getAllSupplier() {
+        return supplierRepository.findAll();
     }
 }

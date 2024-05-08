@@ -6,6 +6,18 @@ import lombok.Data;
 @Builder
 @Data
 public class SuccessResponse {
-    private String message;
+    @Builder.Default
+    private String message = "Success";
     private Object data;
+
+    public static SuccessResponse success(String message, Object data) {
+        return SuccessResponse.builder()
+                .data(data)
+                .message(message).build();
+    }
+
+    public static SuccessResponse success(Object data) {
+        return SuccessResponse.builder()
+                .data(data).build();
+    }
 }

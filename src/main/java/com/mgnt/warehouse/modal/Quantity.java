@@ -3,12 +3,14 @@ package com.mgnt.warehouse.modal;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Quantity extends BaseEntity {
 
     @OneToOne

@@ -2,7 +2,7 @@ package com.mgnt.warehouse.controller;
 
 import com.mgnt.warehouse.modal.Category;
 import com.mgnt.warehouse.modal.response.SuccessResponse;
-import com.mgnt.warehouse.service.ICategoryService;
+import com.mgnt.warehouse.service.IBaseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,16 +14,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryController {
 
-    private final ICategoryService categoryService;
+    private final IBaseService<Long, Category> categoryService;
 
     @GetMapping("list")
     public ResponseEntity<List<Category>> getCategories(@RequestParam(value = "name", required = false) String name) {
-        return ResponseEntity.ok(categoryService.getCategories(name));
+        return ResponseEntity.ok(categoryService.getAllWithFilter(name));
     }
 
     @PostMapping("create")
     public ResponseEntity<Long> createCategory(@RequestBody Category category) {
-        return ResponseEntity.ok(categoryService.addCategory(category));
+        return ResponseEntity.ok(categoryService.create(category));
     }
 
     @PutMapping("update")

@@ -23,14 +23,15 @@ public class ControllerAdviceHandler {
     }
 
     @ExceptionHandler({DuplicateException.class, NotFoundException.class})
-    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    public final ResponseEntity<?> badCredentialsException(DuplicateException ex, WebRequest request) {
-        return ResponseEntity.badRequest().body(ErrorResponse.builder().message(ex.getLocalizedMessage()).status(HttpStatus.BAD_REQUEST).build());
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public final ResponseEntity<?> badRequestException(Exception ex, WebRequest request) {
+        return ResponseEntity.badRequest()
+                .body(ErrorResponse.builder().message(ex.getLocalizedMessage()).status(HttpStatus.BAD_REQUEST).build());
     }
 
     @ExceptionHandler({Exception.class})
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    public final ResponseEntity<ErrorResponse> badCredentialsException(Exception ex, WebRequest request) {
+    public final ResponseEntity<ErrorResponse> applicationException(Exception ex, WebRequest request) {
         log.error("error", ex);
         return ResponseEntity.badRequest().body(ErrorResponse.builder().message(ex.getLocalizedMessage()).status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }

@@ -16,6 +16,8 @@ import java.util.List;
 public class Category extends BaseEntity {
     private String name;
 
+    private String categoryCode;
+
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Product> products;

@@ -2,14 +2,16 @@ package com.mgnt.warehouse.modal;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @EqualsAndHashCode(exclude = {"quantity", "category", "supplier"}, callSuper = false)
-@Data
 @Entity
+@Builder
+@NoArgsConstructor
+@Data
+@AllArgsConstructor
 public class Product extends BaseEntity {
     private String name;
 

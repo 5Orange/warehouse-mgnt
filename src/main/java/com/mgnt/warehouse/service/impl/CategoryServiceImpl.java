@@ -5,30 +5,38 @@ import com.mgnt.warehouse.modal.exception.DuplicateException;
 import com.mgnt.warehouse.modal.exception.InvalidRequestException;
 import com.mgnt.warehouse.modal.mapper.CategoryMapper;
 import com.mgnt.warehouse.repository.CategoryRepository;
-import com.mgnt.warehouse.service.ICategoryService;
+import com.mgnt.warehouse.service.IBaseService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+import static com.mgnt.warehouse.service.ServiceUtils.generateCategoryCode;
+import static java.util.Optional.ofNullable;
+
 @Service
 @RequiredArgsConstructor
-public class CategoryServiceImpl implements ICategoryService {
+public class CategoryServiceImpl implements IBaseService<Long, Category> {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
 
     @Override
-    public List<Category> getCategories(String name) {
-        return categoryRepository.findAllByNameIsContaining(name);
+    public List<Category> getAllWithFilter(String name) {
+        return ofNullable(name)
+                .filter(StringUtils::isNotEmpty)
+                .map(categoryRepository::findAllByNameIsContaining)
+                .orElseGet(categoryRepository::findAll);
     }
 
     @Override
-    public Long addCategory(Category category) {
+    public Long create(Category category) {
         if (categoryRepository.existsCategoryByName(category.getName())) {
             throw new DuplicateException();
         }
+        category.setCategoryCode(generateCategoryCode());
         return categoryRepository.save(category).getId();
     }
 
@@ -45,7 +53,7 @@ public class CategoryServiceImpl implements ICategoryService {
     }
 
     @Override
-    public Optional<Category> getCategoryById(Long id) {
+    public Optional<Category> getById(Long id) {
         if (id == null) {
             throw new InvalidRequestException("Id can not be null!");
         }

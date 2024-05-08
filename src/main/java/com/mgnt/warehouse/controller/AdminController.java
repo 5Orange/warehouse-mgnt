@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("admin")
 public class AdminController {
 
-    @GetMapping("check")
+    @GetMapping("test")
     public String testAdmin() {
         return "only admin can access into this";
     }

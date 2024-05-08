@@ -17,18 +17,16 @@ public class ProductController {
     @PostMapping("create")
     public ResponseEntity<SuccessResponse> createProduct(@RequestBody CreateProductRequest productRequest) {
         Long did = productService.createProduct(productRequest);
-        return ResponseEntity.ok().body(SuccessResponse.builder().message("Product is created").data(did).build());
+        return ResponseEntity.ok().body(SuccessResponse.success("Product is created", did));
     }
 
-    @GetMapping(":id")
-    public ResponseEntity<SuccessResponse> getProduct(@RequestParam("id") Long id) {
-        return null;
+    @GetMapping("{id}")
+    public ResponseEntity<SuccessResponse> getProduct(@PathVariable("id") Long id) {
+        return ResponseEntity.ok().body(SuccessResponse.success(productService.getProductById(id)));
     }
 
     @GetMapping("list")
     public ResponseEntity<SuccessResponse> getProducts() {
-        return ResponseEntity.ok().body(SuccessResponse.builder()
-                .data(productService.getProducts())
-                .build());
+        return ResponseEntity.ok().body(SuccessResponse.success(productService.getProducts()));
     }
 }

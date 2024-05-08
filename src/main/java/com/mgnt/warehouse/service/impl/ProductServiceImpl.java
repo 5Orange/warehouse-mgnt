@@ -9,7 +9,7 @@ import com.mgnt.warehouse.modal.exception.NotFoundException;
 import com.mgnt.warehouse.modal.request.CreateProductRequest;
 import com.mgnt.warehouse.repository.ProductRepository;
 import com.mgnt.warehouse.repository.QuantityRepository;
-import com.mgnt.warehouse.service.ICategoryService;
+import com.mgnt.warehouse.service.IBaseService;
 import com.mgnt.warehouse.service.IProductService;
 import com.mgnt.warehouse.service.ISupplierService;
 import com.mgnt.warehouse.service.ServiceUtils;
@@ -28,7 +28,7 @@ public class ProductServiceImpl implements IProductService {
     private final ProductRepository productRepository;
     private final QuantityRepository quantityRepository;
     private final ISupplierService supplierService;
-    private final ICategoryService categoryService;
+    private final IBaseService<Long, Category> categoryService;
 
     @Override
     public Long createProduct(CreateProductRequest createProductRequest) {
@@ -37,24 +37,24 @@ public class ProductServiceImpl implements IProductService {
             throw new InvalidRequestException("Supplier can not be null!");
         }
 
-        Optional<Category> category = categoryService.getCategoryById(createProductRequest.getCategoryId());
+        Optional<Category> category = categoryService.getById(createProductRequest.getCategoryId());
         if (category.isEmpty()) {
             throw new InvalidRequestException("Category can not be null!");
         }
+        Product product = Product.builder()
+                .productCode(ServiceUtils.generateProductId())
+                .name(createProductRequest.getName())
+                .price(createProductRequest.getPrice())
+                .category(category.get())
+                .supplier(supplier.get())
+                .build();
 
-        Product product = new Product();
-        product.setProductCode(ServiceUtils.generateProductId());
-        product.setName(createProductRequest.getName());
-        product.setCategory(category.get());
-        product.setSupplier(supplier.get());
-        product.setPrice(createProductRequest.getPrice());
+        Quantity quantity = Quantity.builder()
+                .value(createProductRequest.getQuantity())
+                .build();
 
-
-        Quantity quantity = new Quantity();
-        quantity.setValue(createProductRequest.getQuantity());
         quantityRepository.save(quantity);
         quantity.setProduct(product);
-
         product.setQuantity(quantity);
 
         return productRepository.save(product).getId();
@@ -67,7 +67,7 @@ public class ProductServiceImpl implements IProductService {
             throw new BadRequestException("id can not be null!");
         }
         return productRepository.findById(id)
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(() -> new NotFoundException("Product not found!"));
     }
 
     @Override
