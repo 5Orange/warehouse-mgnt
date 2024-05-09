@@ -1,0 +1,12 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  datasource:
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 5
+    url: jdbc:postgresql://FzQFTjMEgpYfxtvVsJMkzIVNAKWW0vXL@dpg-cotr7l0cmk4c73a1n5ng-a.singapore-postgres.render.com/warehousemgnt
+    username: datvu
+    password: FzQFTjMEgpYfxtvVsJMkzIVNAKWW0vXL

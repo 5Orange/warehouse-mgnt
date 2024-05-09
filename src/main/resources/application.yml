@@ -1,15 +1,3 @@
-spring:
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: false
-  datasource:
-    hikari:
-      connectionTimeout: 20000
-      maximumPoolSize: 5
-    url: jdbc:postgresql://localhost:5432/mydb
-    username: datvu
-    password: asdasd
 security:
   jwt:
     secretKey: 7EW1jFa0kdBs0Uwa3WZMqEXZYG3k8vqc1NxOD2DqbxlUt59xxlIMSSrytnKKmk1gldchDE1hhESeEwoktI6JBsPMWOHsOBZcSPih0ChEkbqzax7thZY4dbcFeSyp9uGu
