@@ -15,7 +15,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
         bearerFormat = "JWT",
         scheme = "bearer"
 )
-public class Config {
+public class SpringDocConfig {
 
     @Bean
     AuditorAware<String> auditorProvider() {
