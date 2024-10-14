@@ -1,4 +1,4 @@
-package com.mgnt.warehouse.service;
+package com.mgnt.warehouse.utils;
 
 import java.time.LocalDateTime;
 

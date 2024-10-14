@@ -9,10 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import static com.mgnt.warehouse.utils.ServiceUtils.generateSupplierCode;
+
 import java.util.List;
 import java.util.Optional;
-
-import static com.mgnt.warehouse.service.ServiceUtils.generateSupplierCode;
 
 @Service
 @RequiredArgsConstructor

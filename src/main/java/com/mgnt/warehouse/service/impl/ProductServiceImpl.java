@@ -1,5 +1,11 @@
 package com.mgnt.warehouse.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.apache.coyote.BadRequestException;
+import org.springframework.stereotype.Service;
+
 import com.mgnt.warehouse.modal.Category;
 import com.mgnt.warehouse.modal.Product;
 import com.mgnt.warehouse.modal.Quantity;
@@ -9,17 +15,12 @@ import com.mgnt.warehouse.modal.exception.NotFoundException;
 import com.mgnt.warehouse.modal.request.CreateProductRequest;
 import com.mgnt.warehouse.repository.ProductRepository;
 import com.mgnt.warehouse.repository.QuantityRepository;
-import com.mgnt.warehouse.service.IBaseService;
 import com.mgnt.warehouse.service.IProductService;
 import com.mgnt.warehouse.service.ISupplierService;
-import com.mgnt.warehouse.service.ServiceUtils;
+import com.mgnt.warehouse.utils.ServiceUtils;
+
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.apache.coyote.BadRequestException;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +29,7 @@ public class ProductServiceImpl implements IProductService {
     private final ProductRepository productRepository;
     private final QuantityRepository quantityRepository;
     private final ISupplierService supplierService;
-    private final IBaseService<Long, Category> categoryService;
+    private final CategoryService categoryService;
 
     @Override
     public Long createProduct(CreateProductRequest createProductRequest) {
@@ -37,15 +38,13 @@ public class ProductServiceImpl implements IProductService {
             throw new InvalidRequestException("Supplier can not be null!");
         }
 
-        Optional<Category> category = categoryService.getById(createProductRequest.getCategoryId());
-        if (category.isEmpty()) {
-            throw new InvalidRequestException("Category can not be null!");
-        }
+        Category category = categoryService.categoryDetails(createProductRequest.getCategoryId());
+
         Product product = Product.builder()
                 .productCode(ServiceUtils.generateProductId())
                 .name(createProductRequest.getName())
                 .price(createProductRequest.getPrice())
-                .category(category.get())
+                .category(category)
                 .supplier(supplier.get())
                 .build();
 
