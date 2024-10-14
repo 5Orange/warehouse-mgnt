@@ -1,4 +1,4 @@
-package com.mgnt.warehouse.service.impl;
+package com.mgnt.warehouse.service;
 
 import static com.mgnt.warehouse.utils.ServiceUtils.generateCategoryCode;
 import static java.util.Optional.ofNullable;

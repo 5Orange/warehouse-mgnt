@@ -1,4 +1,4 @@
-package com.mgnt.warehouse.service.impl;
+package com.mgnt.warehouse.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,8 +15,6 @@ import com.mgnt.warehouse.modal.exception.NotFoundException;
 import com.mgnt.warehouse.modal.request.CreateProductRequest;
 import com.mgnt.warehouse.repository.ProductRepository;
 import com.mgnt.warehouse.repository.QuantityRepository;
-import com.mgnt.warehouse.service.IProductService;
-import com.mgnt.warehouse.service.ISupplierService;
 import com.mgnt.warehouse.utils.ServiceUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -24,14 +22,13 @@ import lombok.SneakyThrows;
 
 @Service
 @RequiredArgsConstructor
-public class ProductServiceImpl implements IProductService {
+public class ProductService {
 
     private final ProductRepository productRepository;
     private final QuantityRepository quantityRepository;
-    private final ISupplierService supplierService;
+    private final SupplierService supplierService;
     private final CategoryService categoryService;
 
-    @Override
     public Long createProduct(CreateProductRequest createProductRequest) {
         Optional<Supplier> supplier = supplierService.getSupplierById(createProductRequest.getSupplierId());
         if (supplier.isEmpty()) {
@@ -59,7 +56,6 @@ public class ProductServiceImpl implements IProductService {
         return productRepository.save(product).getId();
     }
 
-    @Override
     @SneakyThrows
     public Product getProductById(Long id) {
         if (id == null) {
@@ -69,7 +65,6 @@ public class ProductServiceImpl implements IProductService {
                 .orElseThrow(() -> new NotFoundException("Product not found!"));
     }
 
-    @Override
     public List<Product> getProducts() {
         return productRepository.findAll();
     }

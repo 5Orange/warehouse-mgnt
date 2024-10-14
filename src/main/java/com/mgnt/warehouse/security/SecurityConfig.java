@@ -2,7 +2,8 @@ package com.mgnt.warehouse.security;
 
 import com.mgnt.warehouse.security.jwt.JwtEntryPoint;
 import com.mgnt.warehouse.security.jwt.JwtRequestFilter;
-import com.mgnt.warehouse.security.service.UserServiceImpl;
+import com.mgnt.warehouse.service.UserServiceImpl;
+
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;

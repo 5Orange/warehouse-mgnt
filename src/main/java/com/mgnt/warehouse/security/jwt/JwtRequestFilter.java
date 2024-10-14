@@ -1,7 +1,5 @@
 package com.mgnt.warehouse.security.jwt;
 
-import com.mgnt.warehouse.security.service.JwtService;
-import com.mgnt.warehouse.security.service.UserServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +11,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.mgnt.warehouse.service.JwtService;
+import com.mgnt.warehouse.service.UserServiceImpl;
 
 import java.io.IOException;
 import java.util.Optional;

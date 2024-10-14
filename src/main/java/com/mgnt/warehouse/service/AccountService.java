@@ -1,4 +1,16 @@
-package com.mgnt.warehouse.service.impl;
+package com.mgnt.warehouse.service;
+
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import com.mgnt.warehouse.modal.auth.Role;
 import com.mgnt.warehouse.modal.auth.RoleConst;
@@ -11,24 +23,12 @@ import com.mgnt.warehouse.modal.response.LoginResponse;
 import com.mgnt.warehouse.modal.response.SuccessResponse;
 import com.mgnt.warehouse.repository.RoleRepository;
 import com.mgnt.warehouse.repository.UserRepository;
-import com.mgnt.warehouse.security.service.JwtService;
-import com.mgnt.warehouse.service.IAccountService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class AccountServiceImpl implements IAccountService {
+public class AccountService {
 
     private static final String ROLE_NOT_FOUND = "Error: Role is not found.";
     private final UserRepository userRepository;
@@ -38,7 +38,6 @@ public class AccountServiceImpl implements IAccountService {
     private final SigninRequestMapper signinRequestMapper;
     private final JwtService jwtService;
 
-    @Override
     public ResponseEntity<?> createAccount(SignUpRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity.badRequest().body(ErrorResponse.builder().message("username already exist").build());
@@ -70,10 +69,10 @@ public class AccountServiceImpl implements IAccountService {
 
         user.setRoles(roles);
         userRepository.save(user);
-        return ResponseEntity.ok().body(SuccessResponse.builder().message("User registered successfully!").data(user.getUsername()).build());
+        return ResponseEntity.ok().body(
+                SuccessResponse.builder().message("User registered successfully!").data(user.getUsername()).build());
     }
 
-    @Override
     public ResponseEntity<?> login(LoginRequest request) {
         User user = userRepository.findByUsername(request.getUsername()).orElse(null);
         return Optional.ofNullable(user)
@@ -81,9 +80,7 @@ public class AccountServiceImpl implements IAccountService {
                     Authentication authentication = authenticationManager.authenticate(
                             new UsernamePasswordAuthenticationToken(
                                     request.getUsername(),
-                                    request.getPassword()
-                            )
-                    );
+                                    request.getPassword()));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                     String jwt = jwtService.generateJwtToken(authentication);
                     return ResponseEntity.ok().body(LoginResponse.builder().token(jwt).build());

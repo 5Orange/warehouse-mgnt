@@ -1,4 +1,4 @@
-package com.mgnt.warehouse.security.service;
+package com.mgnt.warehouse.service;
 
 import static java.util.Optional.ofNullable;
 

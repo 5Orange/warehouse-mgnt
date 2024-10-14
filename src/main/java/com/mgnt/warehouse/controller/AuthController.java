@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mgnt.warehouse.modal.request.LoginRequest;
 import com.mgnt.warehouse.modal.request.SignUpRequest;
-import com.mgnt.warehouse.service.IAccountService;
+import com.mgnt.warehouse.service.AccountService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final IAccountService accountService;
+    private final AccountService accountService;
 
     @PostMapping("signin")
     @Operation(summary = "Login in")
