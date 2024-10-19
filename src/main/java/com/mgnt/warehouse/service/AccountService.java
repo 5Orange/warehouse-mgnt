@@ -39,7 +39,7 @@ public class AccountService {
     private final JwtService jwtService;
 
     public ResponseEntity<?> createAccount(SignUpRequest signUpRequest) {
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+        if (userRepository.existsByUsernameOrPhoneNumber(signUpRequest.getUsername(), signUpRequest.getPhoneNumber())) {
             return ResponseEntity.badRequest().body(ErrorResponse.builder().message("username already exist").build());
         }
         User user = signinRequestMapper.toUser(signUpRequest);
