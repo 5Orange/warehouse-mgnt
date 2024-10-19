@@ -15,7 +15,7 @@ import com.mgnt.warehouse.modal.Category;
 import com.mgnt.warehouse.modal.common.MetricSearch;
 import com.mgnt.warehouse.modal.response.PagingResponse;
 import com.mgnt.warehouse.modal.response.SuccessResponse;
-import com.mgnt.warehouse.service.impl.CategoryService;
+import com.mgnt.warehouse.service.CategoryService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;

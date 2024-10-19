@@ -10,5 +10,6 @@ public interface SigninRequestMapper {
 
     @Mapping(target = "roles", ignore = true)
     @Mapping(target = "password", ignore = true)
+    @Mapping(target = "phoneNumber", source = "phoneNumber")
     User toUser(SignUpRequest signUpRequest);
 }

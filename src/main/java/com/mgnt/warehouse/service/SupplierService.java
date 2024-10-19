@@ -1,25 +1,25 @@
-package com.mgnt.warehouse.service.impl;
-
-import com.mgnt.warehouse.modal.Supplier;
-import com.mgnt.warehouse.modal.exception.DuplicateException;
-import com.mgnt.warehouse.modal.exception.InvalidRequestException;
-import com.mgnt.warehouse.repository.SupplierRepository;
-import com.mgnt.warehouse.service.ISupplierService;
-import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
+package com.mgnt.warehouse.service;
 
 import static com.mgnt.warehouse.utils.ServiceUtils.generateSupplierCode;
 
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
+
+import com.mgnt.warehouse.modal.Supplier;
+import com.mgnt.warehouse.modal.exception.DuplicateException;
+import com.mgnt.warehouse.modal.exception.InvalidRequestException;
+import com.mgnt.warehouse.repository.SupplierRepository;
+
+import lombok.RequiredArgsConstructor;
+
 @Service
 @RequiredArgsConstructor
-public class SupplierServiceImpl implements ISupplierService {
+public class SupplierService {
     private final SupplierRepository supplierRepository;
 
-    @Override
     public Optional<Supplier> getSupplierById(Long id) {
         if (id == null) {
             throw new InvalidRequestException("Id can not be null!");
@@ -27,7 +27,6 @@ public class SupplierServiceImpl implements ISupplierService {
         return supplierRepository.findById(id);
     }
 
-    @Override
     public Long createSupplier(Supplier supplier) {
         if (StringUtils.isEmpty(supplier.getName())) {
             throw new InvalidRequestException("Supplier name is required");
@@ -40,7 +39,6 @@ public class SupplierServiceImpl implements ISupplierService {
         return supplierRepository.save(supplier).getId();
     }
 
-    @Override
     public List<Supplier> getAllSupplier() {
         return supplierRepository.findAll();
     }

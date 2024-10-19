@@ -1,7 +1,6 @@
 package com.mgnt.warehouse.security.jwt;
 
-import com.mgnt.warehouse.security.service.JwtService;
-import com.mgnt.warehouse.security.service.UserServiceImpl;
+import com.mgnt.warehouse.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -21,7 +21,7 @@ import java.util.Optional;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
-    private final UserServiceImpl userDetailServiceImpl;
+    private final UserDetailsService userDetailServiceImpl;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -29,7 +29,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             String jwt = getJwt(request);
             if (jwt != null)
                 Optional.ofNullable(getJwt(request))
-                        .filter(token -> jwtService.validateJwtToken(token))
+                        .filter(jwtService::validateJwtToken)
                         .ifPresent(token -> {
                             String username = jwtService.getUserNameFromJwtToken(token);
                             UserDetails userDetails = userDetailServiceImpl.loadUserByUsername(username);

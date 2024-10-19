@@ -2,7 +2,7 @@ package com.mgnt.warehouse.security;
 
 import com.mgnt.warehouse.security.jwt.JwtEntryPoint;
 import com.mgnt.warehouse.security.jwt.JwtRequestFilter;
-import com.mgnt.warehouse.security.service.UserServiceImpl;
+import com.mgnt.warehouse.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
@@ -33,7 +33,7 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/error"
     };
-    private final UserServiceImpl userService;
+    private final UserDetailsServiceImpl userService;
     private final JwtEntryPoint jwtEntryPoint;
     private final JwtRequestFilter jwtRequestFilter;
 
