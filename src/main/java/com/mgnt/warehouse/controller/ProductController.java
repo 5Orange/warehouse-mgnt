@@ -1,8 +1,5 @@
 package com.mgnt.warehouse.controller;
 
-import com.mgnt.warehouse.modal.common.MetricSearch;
-import io.swagger.v3.oas.annotations.Operation;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,11 +8,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mgnt.warehouse.modal.common.MetricSearch;
 import com.mgnt.warehouse.modal.request.CreateProductRequest;
 import com.mgnt.warehouse.modal.response.SuccessResponse;
 import com.mgnt.warehouse.service.ProductService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/user/product")
@@ -29,7 +29,7 @@ public class ProductController {
     @Operation(summary = "create new product")
     public ResponseEntity<SuccessResponse> createProduct(@RequestBody CreateProductRequest productRequest) {
         log.info("Creating new product");
-        Long did = productService.createProduct(productRequest);
+        String did = productService.createProduct(productRequest);
         return ResponseEntity.ok().body(SuccessResponse.success("Product is created", did));
     }
 

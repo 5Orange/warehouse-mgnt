@@ -24,12 +24,12 @@ public class SupplierController {
 
     @PostMapping("create")
     public ResponseEntity<SuccessResponse> createSupplier(@RequestBody Supplier supplier) {
-        Long id = supplierService.createSupplier(supplier);
+        String id = supplierService.createSupplier(supplier);
         return ResponseEntity.ok().body(SuccessResponse.builder().message("Create Successful").data(id).build());
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<SuccessResponse> getSupplier(@PathVariable("id") Long id) {
+    public ResponseEntity<SuccessResponse> getSupplier(@PathVariable("id") String id) {
         return ResponseEntity.ok().body(SuccessResponse.success(supplierService.getSupplierById(id)));
     }
 

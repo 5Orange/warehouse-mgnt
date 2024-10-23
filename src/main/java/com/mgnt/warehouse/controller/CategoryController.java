@@ -39,7 +39,7 @@ public class CategoryController {
 
     @PostMapping("create")
     @Operation(summary = "Create new category")
-    public ResponseEntity<Long> createCategory(@Valid @RequestBody Category category) {
+    public ResponseEntity<String> createCategory(@Valid @RequestBody Category category) {
         log.info("create new category is call");
         return ResponseEntity.ok(categoryService.createNewCategory(category));
     }
@@ -54,14 +54,14 @@ public class CategoryController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<SuccessResponse> deleteCategory(@PathVariable("id") Long id) {
+    public ResponseEntity<SuccessResponse> deleteCategory(@PathVariable("id") String id) {
         log.info("delete category with ID : {} is call", id);
         categoryService.deleteCategory(id);
         return ResponseEntity.ok().body(SuccessResponse.builder().message("Deleted").build());
     }
 
     @GetMapping
-    public ResponseEntity<Category> getCategory(@RequestParam("id") Long id) {
+    public ResponseEntity<Category> getCategory(@RequestParam("id") String id) {
         log.info("retrive category by ID : {} is call", id);
         return ResponseEntity.ok().body(categoryService.categoryDetails(id));
     }

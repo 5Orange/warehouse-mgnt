@@ -18,6 +18,7 @@ public class ServiceUtils {
 
     private static String generateCode(String prefix) {
         var currentDate = LocalDateTime.now();
-        return String.format("%s%s%s%s%s%s", prefix, currentDate.getYear(), currentDate.getMonth(), currentDate.getDayOfMonth(), currentDate.getMinute(), currentDate.getSecond());
+        return String.format("%s%s%s%s%s%s", prefix, currentDate.getYear(), currentDate.getMonth(),
+                currentDate.getDayOfMonth(), currentDate.getMinute(), currentDate.getSecond());
     }
 }

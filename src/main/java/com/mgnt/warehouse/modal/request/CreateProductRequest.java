@@ -1,14 +1,14 @@
 package com.mgnt.warehouse.modal.request;
 
-import lombok.Getter;
-
 import java.math.BigDecimal;
+
+import lombok.Getter;
 
 @Getter
 public class CreateProductRequest {
     private String name;
     private BigDecimal price;
     private long quantity;
-    private Long categoryId;
-    private Long supplierId;
+    private String categoryId;
+    private String supplierId;
 }

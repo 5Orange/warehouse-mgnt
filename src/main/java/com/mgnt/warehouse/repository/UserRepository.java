@@ -1,18 +1,19 @@
 package com.mgnt.warehouse.repository;
 
-import com.mgnt.warehouse.modal.auth.User;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import com.mgnt.warehouse.modal.auth.User;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, String> {
     Optional<User> findByUsername(String username);
 
     boolean existsByUsernameOrPhoneNumber(String username, String phoneNumber);
 
-    Long removeUserById(Long id);
+    Long removeUserById(String id);
 
-    User findUserById(Long id);
+    User findUserById(String id);
 }

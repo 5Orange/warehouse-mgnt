@@ -20,14 +20,14 @@ import lombok.RequiredArgsConstructor;
 public class SupplierService {
     private final SupplierRepository supplierRepository;
 
-    public Optional<Supplier> getSupplierById(Long id) {
+    public Optional<Supplier> getSupplierById(String id) {
         if (id == null) {
             throw new InvalidRequestException("Id can not be null!");
         }
         return supplierRepository.findById(id);
     }
 
-    public Long createSupplier(Supplier supplier) {
+    public String createSupplier(Supplier supplier) {
         if (StringUtils.isEmpty(supplier.getName())) {
             throw new InvalidRequestException("Supplier name is required");
         }

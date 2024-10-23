@@ -1,13 +1,18 @@
 package com.mgnt.warehouse.modal;
 
-import jakarta.persistence.*;
-import lombok.Data;
+import java.time.Instant;
+
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.Instant;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import lombok.Data;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -15,8 +20,8 @@ import java.time.Instant;
 public class BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @CreatedDate
     private Instant createDate;
@@ -27,5 +32,3 @@ public class BaseEntity {
     @CreatedBy
     private String createdBy;
 }
-
-

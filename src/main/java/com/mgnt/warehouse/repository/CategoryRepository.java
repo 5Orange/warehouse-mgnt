@@ -10,12 +10,12 @@ import org.springframework.stereotype.Repository;
 import com.mgnt.warehouse.modal.Category;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Category, Long>, QuerydslPredicateExecutor<Category> {
+public interface CategoryRepository extends JpaRepository<Category, String>, QuerydslPredicateExecutor<Category> {
 
     List<Category> findAllByNameIsContaining(String name);
 
     boolean existsCategoryByName(String name);
 
-    Optional<Category> findCategoryById(Long id);
+    Optional<Category> findCategoryById(String id);
 
 }

@@ -1,19 +1,21 @@
 package com.mgnt.warehouse.modal.auth;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.Getter;
+
 @Getter
 public class UserPrinciple implements UserDetails {
 
-    private final Long id;
+    private final String id;
     private final String username;
     @JsonIgnore
     private final String password;
@@ -21,7 +23,8 @@ public class UserPrinciple implements UserDetails {
     private final String fullName;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserPrinciple(Long id, String username, String password, String email, String fullName, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrinciple(String id, String username, String password, String email, String fullName,
+            Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -40,8 +43,7 @@ public class UserPrinciple implements UserDetails {
                 user.getPassword(),
                 user.getEmail(),
                 user.getFullName(),
-                authorities
-        );
+                authorities);
     }
 
     @Override

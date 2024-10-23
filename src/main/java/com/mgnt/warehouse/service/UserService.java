@@ -1,17 +1,19 @@
 package com.mgnt.warehouse.service;
 
+import static java.util.Optional.ofNullable;
+
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
 import com.mgnt.warehouse.modal.BaseEntity;
 import com.mgnt.warehouse.modal.auth.Role;
 import com.mgnt.warehouse.modal.auth.RoleConst;
 import com.mgnt.warehouse.modal.auth.User;
 import com.mgnt.warehouse.repository.RoleRepository;
 import com.mgnt.warehouse.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import java.util.Optional;
-
-import static java.util.Optional.ofNullable;
 
 @RequiredArgsConstructor
 @Service
@@ -20,14 +22,13 @@ public class UserService {
 
     private final RoleRepository roleRepository;
 
-    public User updateUser(Long id, User user) {
+    public User updateUser(String id, User user) {
         var userDb = ofNullable(id)
                 .map(userRepository::findUserById)
                 .orElseGet(() -> ofNullable(user)
                         .map(BaseEntity::getId)
                         .map(userRepository::findUserById)
-                        .orElse(null)
-                );
+                        .orElse(null));
         return ofNullable(userDb)
                 .map(u -> {
                     u.setPhoneNumber(user.getPhoneNumber());
@@ -37,7 +38,6 @@ public class UserService {
                     u.setAddress(user.getAddress());
                     return userRepository.save(u);
                 }).orElse(null);
-
 
     }
 
