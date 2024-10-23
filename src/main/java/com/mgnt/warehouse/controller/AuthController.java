@@ -30,7 +30,7 @@ public class AuthController {
 
     @PostMapping("signup")
     @Operation(summary = "Create new user")
-    public ResponseEntity<?> signup(@RequestBody @NotNull SignUpRequest signUpRequest) {
+    public ResponseEntity<?> signup(@RequestBody @NotNull @Valid SignUpRequest signUpRequest) {
         return accountService.createAccount(signUpRequest);
     }
 }
