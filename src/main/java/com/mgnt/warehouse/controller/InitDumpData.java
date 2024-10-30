@@ -17,12 +17,12 @@ public class InitDumpData {
     @PostConstruct
     public void init() {
         roleRepository.findByName(RoleConst.ROLE_USER)
-                .ifPresentOrElse((value) -> log.info("OK!"),
-                        () -> roleRepository.save(Role.builder().name(RoleConst.ROLE_USER).build()));
+            .ifPresentOrElse((value) -> log.info("OK!"),
+                () -> roleRepository.save(Role.builder().name(RoleConst.ROLE_USER).build()));
 
         roleRepository.findByName(RoleConst.ROLE_ADMIN)
-                .ifPresentOrElse((value) -> log.info("OK!"),
-                        () -> roleRepository.save(Role.builder().name(RoleConst.ROLE_ADMIN).build()));
+            .ifPresentOrElse((value) -> log.info("OK!"),
+                () -> roleRepository.save(Role.builder().name(RoleConst.ROLE_ADMIN).build()));
 
     }
 }

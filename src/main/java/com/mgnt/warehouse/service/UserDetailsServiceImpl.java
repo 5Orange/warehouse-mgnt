@@ -18,9 +18,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return ofNullable(username)
-                .flatMap(u -> userRepository.findByUsername(u)
-                        .map(UserPrinciple::build))
-                .orElseThrow(() -> new IllegalArgumentException("user not found"));
+            .flatMap(u -> userRepository.findByUsername(u)
+                .map(UserPrinciple::build))
+            .orElseThrow(() -> new IllegalArgumentException("user not found"));
 
     }
 }

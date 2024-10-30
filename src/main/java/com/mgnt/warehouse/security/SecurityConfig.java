@@ -27,11 +27,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private static final String[] FREE_ACCESS = new String[]{
-            "/auth/**",
-            "/api-docs",
-            "/api-docs/**",
-            "/swagger-ui/**",
-            "/error"
+        "/auth/**",
+        "/api-docs",
+        "/api-docs/**",
+        "/swagger-ui/**",
+        "/error"
     };
     private final UserDetailsServiceImpl userService;
     private final JwtEntryPoint jwtEntryPoint;
@@ -54,15 +54,15 @@ public class SecurityConfig {
     @SneakyThrows
     protected SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
-                .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtEntryPoint))
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests(request ->
-                        request.requestMatchers(FREE_ACCESS).permitAll()
-                                .requestMatchers("/user/**").permitAll()
-                                .requestMatchers("/admin/**").hasRole("ADMIN")
-                                .anyRequest().authenticated());
+            .cors(AbstractHttpConfigurer::disable)
+            .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtEntryPoint))
+            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+            .authorizeHttpRequests(request ->
+                request.requestMatchers(FREE_ACCESS).permitAll()
+                    .requestMatchers("/user/**").permitAll()
+                    .requestMatchers("/admin/**").hasRole("ADMIN")
+                    .anyRequest().authenticated());
         httpSecurity.authenticationManager(authenticationManager());
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();

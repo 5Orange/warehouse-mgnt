@@ -1,19 +1,17 @@
 package com.mgnt.warehouse.service;
 
-import static com.mgnt.warehouse.utils.ServiceUtils.generateSupplierCode;
-
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
-
 import com.mgnt.warehouse.modal.Supplier;
 import com.mgnt.warehouse.modal.exception.DuplicateException;
 import com.mgnt.warehouse.modal.exception.InvalidRequestException;
 import com.mgnt.warehouse.repository.SupplierRepository;
-
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+import static com.mgnt.warehouse.utils.ServiceUtils.generateSupplierCode;
 
 @Service
 @RequiredArgsConstructor

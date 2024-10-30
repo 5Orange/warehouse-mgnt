@@ -1,10 +1,10 @@
 package com.mgnt.warehouse.modal.request;
 
+import lombok.Data;
+
 import java.math.BigDecimal;
 
-import lombok.Getter;
-
-@Getter
+@Data
 public class CreateProductRequest {
     private String name;
     private BigDecimal price;

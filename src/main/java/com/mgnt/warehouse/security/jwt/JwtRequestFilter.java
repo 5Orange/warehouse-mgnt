@@ -29,16 +29,16 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             String jwt = getJwt(request);
             if (jwt != null)
                 Optional.ofNullable(getJwt(request))
-                        .filter(jwtService::validateJwtToken)
-                        .ifPresent(token -> {
-                            String username = jwtService.getUserNameFromJwtToken(token);
-                            UserDetails userDetails = userDetailServiceImpl.loadUserByUsername(username);
-                            UsernamePasswordAuthenticationToken authentication
-                                    = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    .filter(jwtService::validateJwtToken)
+                    .ifPresent(token -> {
+                        String username = jwtService.getUserNameFromJwtToken(token);
+                        UserDetails userDetails = userDetailServiceImpl.loadUserByUsername(username);
+                        UsernamePasswordAuthenticationToken authentication
+                            = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                            SecurityContextHolder.getContext().setAuthentication(authentication);
-                        });
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    });
         } catch (Exception e) {
             logger.error("Can NOT set user authentication -> Message: {}", e);
         }

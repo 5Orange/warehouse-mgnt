@@ -1,16 +1,14 @@
 package com.mgnt.warehouse.modal.auth;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import lombok.Getter;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public class UserPrinciple implements UserDetails {
@@ -24,7 +22,7 @@ public class UserPrinciple implements UserDetails {
     private final Collection<? extends GrantedAuthority> authorities;
 
     public UserPrinciple(String id, String username, String password, String email, String fullName,
-            Collection<? extends GrantedAuthority> authorities) {
+                         Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -35,15 +33,15 @@ public class UserPrinciple implements UserDetails {
 
     public static UserPrinciple build(User user) {
         List<GrantedAuthority> authorities = user.getRoles()
-                .stream().map(role -> new SimpleGrantedAuthority(role.getName().name()))
-                .collect(Collectors.toList());
+            .stream().map(role -> new SimpleGrantedAuthority(role.getName().name()))
+            .collect(Collectors.toList());
         return new UserPrinciple(
-                user.getId(),
-                user.getUsername(),
-                user.getPassword(),
-                user.getEmail(),
-                user.getFullName(),
-                authorities);
+            user.getId(),
+            user.getUsername(),
+            user.getPassword(),
+            user.getEmail(),
+            user.getFullName(),
+            authorities);
     }
 
     @Override

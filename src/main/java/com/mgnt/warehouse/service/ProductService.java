@@ -1,13 +1,5 @@
 package com.mgnt.warehouse.service;
 
-import java.util.Optional;
-
-import org.apache.coyote.BadRequestException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
 import com.mgnt.warehouse.modal.Category;
 import com.mgnt.warehouse.modal.Product;
 import com.mgnt.warehouse.modal.Quantity;
@@ -25,9 +17,16 @@ import com.mgnt.warehouse.utils.ApplicationUtils;
 import com.mgnt.warehouse.utils.ServiceUtils;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
-
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.apache.coyote.BadRequestException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +37,7 @@ public class ProductService {
     private final SupplierService supplierService;
     private final CategoryService categoryService;
 
+    @Transactional
     public String createProduct(CreateProductRequest createProductRequest) {
         Optional<Supplier> supplier = supplierService.getSupplierById(createProductRequest.getSupplierId());
         if (supplier.isEmpty()) {
@@ -47,16 +47,16 @@ public class ProductService {
         Category category = categoryService.categoryDetails(createProductRequest.getCategoryId());
 
         Product product = Product.builder()
-                .productCode(ServiceUtils.generateProductId())
-                .name(createProductRequest.getName())
-                .price(createProductRequest.getPrice())
-                .category(category)
-                .supplier(supplier.get())
-                .build();
+            .productCode(ServiceUtils.generateProductId())
+            .name(createProductRequest.getName())
+            .price(createProductRequest.getPrice())
+            .category(category)
+            .supplier(supplier.get())
+            .build();
 
         Quantity quantity = Quantity.builder()
-                .value(createProductRequest.getQuantity())
-                .build();
+            .value(createProductRequest.getQuantity())
+            .build();
 
         quantityRepository.save(quantity);
         quantity.setProduct(product);
@@ -71,7 +71,7 @@ public class ProductService {
             throw new BadRequestException("id can not be null!");
         }
         return productRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Product not found!"));
+            .orElseThrow(() -> new NotFoundException("Product not found!"));
     }
 
     public PagingResponse<Product> getProducts(MetricSearch metricSearch) {
