@@ -6,7 +6,6 @@ import com.mgnt.warehouse.modal.Quantity;
 import com.mgnt.warehouse.modal.Supplier;
 import com.mgnt.warehouse.modal.common.MetricFilter;
 import com.mgnt.warehouse.modal.common.MetricSearch;
-import com.mgnt.warehouse.modal.exception.InvalidRequestException;
 import com.mgnt.warehouse.modal.exception.NotFoundException;
 import com.mgnt.warehouse.modal.predicate.ProductPredicate;
 import com.mgnt.warehouse.modal.request.CreateProductRequest;
@@ -39,20 +38,17 @@ public class ProductService {
 
     @Transactional
     public String createProduct(CreateProductRequest createProductRequest) {
-        Optional<Supplier> supplier = supplierService.getSupplierById(createProductRequest.getSupplierId());
-        if (supplier.isEmpty()) {
-            throw new InvalidRequestException("Supplier can not be null!");
-        }
+        Supplier supplier = supplierService.getSupplierById(createProductRequest.getSupplierId());
 
         Category category = categoryService.categoryDetails(createProductRequest.getCategoryId());
 
         Product product = Product.builder()
-            .productCode(ServiceUtils.generateProductId())
-            .name(createProductRequest.getName())
-            .price(createProductRequest.getPrice())
-            .category(category)
-            .supplier(supplier.get())
-            .build();
+                .productCode(ServiceUtils.generateProductId())
+                .name(createProductRequest.getName())
+                .price(createProductRequest.getPrice())
+                .category(category)
+                .supplier(supplier)
+                .build();
 
         Quantity quantity = Quantity.builder()
             .value(createProductRequest.getQuantity())
@@ -66,7 +62,7 @@ public class ProductService {
     }
 
     @SneakyThrows
-    public Product getProductById(Long id) {
+    public Product getProductById(String id) {
         if (id == null) {
             throw new BadRequestException("id can not be null!");
         }

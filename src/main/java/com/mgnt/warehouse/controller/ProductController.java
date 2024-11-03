@@ -28,7 +28,7 @@ public class ProductController {
 
     @GetMapping("{id}")
     @Operation(summary = "Get specific product by id")
-    public ResponseEntity<SuccessResponse> getProduct(@PathVariable("id") Long id) {
+    public ResponseEntity<SuccessResponse> getProduct(@PathVariable("id") String id) {
         log.info("Get product by id is calling");
         return ResponseEntity.ok().body(SuccessResponse.success(productService.getProductById(id)));
     }
