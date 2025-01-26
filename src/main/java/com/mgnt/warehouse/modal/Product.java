@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @EqualsAndHashCode(exclude = {"quantity", "category", "supplier"}, callSuper = false)
 @Entity
@@ -33,5 +34,8 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "supplier_id", nullable = false)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Supplier supplier;
+
+    @ManyToMany(mappedBy = "products")
+    private List<OrderEntity> orders;
 
 }

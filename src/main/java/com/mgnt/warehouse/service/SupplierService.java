@@ -42,7 +42,7 @@ public class SupplierService {
             throw new InvalidRequestException("Id can not be null!");
         }
         return supplierRepository.findById(id)
-                .orElseThrow();
+                .orElseThrow(() -> new InvalidRequestException("No Supplier found"));
     }
 
     public String createSupplier(Supplier supplier) {

@@ -29,9 +29,10 @@ public class CategoryController {
 
     @PostMapping("create")
     @Operation(summary = "Create new category")
-    public ResponseEntity<String> createCategory(@Valid @RequestBody Category category) {
+    public ResponseEntity<SuccessResponse> createCategory(@Valid @RequestBody Category category) {
         log.info("create new category is call");
-        return ResponseEntity.ok(categoryService.createNewCategory(category));
+        var categoryId = categoryService.createNewCategory(category);
+        return ResponseEntity.ok(SuccessResponse.builder().message("Create Successful").data(categoryId).build());
     }
 
     @PutMapping("update")
