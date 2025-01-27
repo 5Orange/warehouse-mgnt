@@ -6,6 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import com.mgnt.warehouse.modal.Product;
 
+import java.util.List;
+
 @Repository
 public interface ProductRepository extends JpaRepository<Product, String>, QuerydslPredicateExecutor<Product> {
+    List<Product> findAllByIdIn(List<String> ids);
 }

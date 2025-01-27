@@ -1,5 +1,6 @@
 package com.mgnt.warehouse.modal;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -36,6 +37,7 @@ public class Product extends BaseEntity {
     private Supplier supplier;
 
     @ManyToMany(mappedBy = "products")
+    @JsonIgnore
     private List<OrderEntity> orders;
 
 }

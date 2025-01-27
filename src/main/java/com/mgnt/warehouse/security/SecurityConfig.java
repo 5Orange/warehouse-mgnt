@@ -60,7 +60,7 @@ public class SecurityConfig {
             .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
             .authorizeHttpRequests(request ->
                 request.requestMatchers(FREE_ACCESS).permitAll()
-                    .requestMatchers("/user/**").permitAll()
+                    .requestMatchers("/user/**", "/order/**").permitAll()
                     .requestMatchers("/admin/**").hasRole("ADMIN")
                     .anyRequest().authenticated());
         httpSecurity.authenticationManager(authenticationManager());

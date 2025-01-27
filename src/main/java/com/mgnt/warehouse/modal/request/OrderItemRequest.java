@@ -1,9 +1,7 @@
 package com.mgnt.warehouse.modal.request;
 
-import lombok.Data;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
-@Data
-public class OrderItemRequest {
-    private String productId;
-    private Long quantity;
+public record OrderItemRequest(@NotNull String productId, @Min(0) Long quantity) {
 }
