@@ -12,14 +12,14 @@ public class SpringSecurityAuditorAware implements AuditorAware<String> {
     @Override
     public Optional<String> getCurrentAuditor() {
         return Optional.ofNullable(SecurityContextHolder.getContext())
-            .map(SecurityContext::getAuthentication)
-            .filter(Authentication::isAuthenticated)
-            .map(Authentication::getPrincipal)
-            .map(user -> {
-                if (user instanceof UserPrinciple userPrinciple) {
-                    return userPrinciple.getUsername();
-                }
-                return "SYSTEM";
-            });
+                .map(SecurityContext::getAuthentication)
+                .filter(Authentication::isAuthenticated)
+                .map(Authentication::getPrincipal)
+                .map(user -> {
+                    if (user instanceof UserPrinciple userPrinciple) {
+                        return userPrinciple.getUsername();
+                    }
+                    return "SYSTEM";
+                });
     }
 }

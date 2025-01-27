@@ -30,19 +30,19 @@ public class JwtService {
         UserPrinciple userPrincipal = (UserPrinciple) authentication.getPrincipal();
 
         return Jwts.builder()
-            .subject((userPrincipal.getUsername()))
-            .issuedAt(new Date())
-            .expiration(new Date((new Date()).getTime() + jwtExpiration * 1000))
-            .signWith(getSignInKey(), Jwts.SIG.HS256)
-            .compact();
+                .subject((userPrincipal.getUsername()))
+                .issuedAt(new Date())
+                .expiration(new Date((new Date()).getTime() + jwtExpiration * 1000))
+                .signWith(getSignInKey(), Jwts.SIG.HS256)
+                .compact();
     }
 
     public String getUserNameFromJwtToken(String token) {
         return Jwts.parser()
-            .verifyWith(getSignInKey())
-            .build()
-            .parseSignedClaims(token)
-            .getPayload().getSubject();
+                .verifyWith(getSignInKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload().getSubject();
     }
 
     public boolean validateJwtToken(String authToken) {

@@ -19,6 +19,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -27,11 +32,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private static final String[] FREE_ACCESS = new String[]{
-        "/auth/**",
-        "/api-docs",
-        "/api-docs/**",
-        "/swagger-ui/**",
-        "/error"
+            "/auth/**",
+            "/api-docs",
+            "/api-docs/**",
+            "/swagger-ui/**",
+            "/error"
     };
     private final UserDetailsServiceImpl userService;
     private final JwtEntryPoint jwtEntryPoint;
@@ -51,18 +56,30 @@ public class SecurityConfig {
     }
 
     @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("*"));
+        configuration.setAllowedMethods(List.of("*"));
+        configuration.setAllowedHeaders(List.of("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+    @Bean
     @SneakyThrows
     protected SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) {
-        httpSecurity.csrf(AbstractHttpConfigurer::disable)
-            .cors(AbstractHttpConfigurer::disable)
-            .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtEntryPoint))
-            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-            .authorizeHttpRequests(request ->
-                request.requestMatchers(FREE_ACCESS).permitAll()
-                    .requestMatchers("/user/**", "/order/**").permitAll()
-                    .requestMatchers("/admin/**").hasRole("ADMIN")
-                    .anyRequest().authenticated());
+        httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(x -> x.configurationSource(corsConfigurationSource()))
+                .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtEntryPoint))
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .authorizeHttpRequests(request ->
+                        request.requestMatchers(FREE_ACCESS).permitAll()
+                                .requestMatchers("/user/**", "/order/**").permitAll()
+                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                .anyRequest().authenticated());
         httpSecurity.authenticationManager(authenticationManager());
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();

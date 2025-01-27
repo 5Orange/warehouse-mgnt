@@ -14,8 +14,8 @@ public class ApplicationUtils {
             return PageRequest.of(metricSearch.getPageNumber(), metricSearch.getPageSize());
         } else {
             return PageRequest.of(metricSearch.getPageNumber(), metricSearch.getPageSize(),
-                metricSearch.getDesc() == null ? Direction.ASC : Direction.DESC,
-                metricSearch.getSortField());
+                    metricSearch.getDesc() == null ? Direction.ASC : Direction.DESC,
+                    metricSearch.getSortField());
         }
     }
 

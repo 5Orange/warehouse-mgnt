@@ -24,14 +24,14 @@ public class ControllerAdviceHandler {
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public final ResponseEntity<?> badCredentialsException(ConstraintViolationException ex, WebRequest request) {
         return ResponseEntity.badRequest().body(
-            ErrorResponse.builder().message(ex.getLocalizedMessage()).status(HttpStatus.UNAUTHORIZED).build());
+                ErrorResponse.builder().message(ex.getLocalizedMessage()).status(HttpStatus.UNAUTHORIZED).build());
     }
 
     @ExceptionHandler({DuplicateException.class, NotFoundException.class})
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public final ResponseEntity<?> badRequestException(Exception ex, WebRequest request) {
         return ResponseEntity.badRequest()
-            .body(ErrorResponse.builder().message(ex.getLocalizedMessage()).status(HttpStatus.BAD_REQUEST).build());
+                .body(ErrorResponse.builder().message(ex.getLocalizedMessage()).status(HttpStatus.BAD_REQUEST).build());
     }
 
     @ExceptionHandler(HandlerMethodValidationException.class)
@@ -39,15 +39,15 @@ public class ControllerAdviceHandler {
     public final ResponseEntity<?> handlerMethodValidationException(HandlerMethodValidationException ex,
                                                                     WebRequest request) {
         var errorMessage = ex.getAllValidationResults()
-            .stream()
-            .flatMap(x -> x.getResolvableErrors()
                 .stream()
-                .map(MessageSourceResolvable::getDefaultMessage))
-            .collect(Collectors.joining(", "));
+                .flatMap(x -> x.getResolvableErrors()
+                        .stream()
+                        .map(MessageSourceResolvable::getDefaultMessage))
+                .collect(Collectors.joining(", "));
         return ResponseEntity.badRequest()
-            .body(ErrorResponse.builder()
-                .message(errorMessage)
-                .status(HttpStatus.BAD_REQUEST).build());
+                .body(ErrorResponse.builder()
+                        .message(errorMessage)
+                        .status(HttpStatus.BAD_REQUEST).build());
     }
 
     @ExceptionHandler({Exception.class})
@@ -55,7 +55,7 @@ public class ControllerAdviceHandler {
     public final ResponseEntity<ErrorResponse> applicationException(Exception ex, WebRequest request) {
         log.error("error", ex);
         return ResponseEntity.badRequest().body(ErrorResponse.builder().message(ex.getLocalizedMessage())
-            .status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+                .status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
 }

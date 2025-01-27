@@ -16,7 +16,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("create")
-    public ResponseEntity<SuccessResponse> createAnOrder(@RequestBody @Valid  CreateOrderRequest orderRequest) {
+    public ResponseEntity<SuccessResponse> createAnOrder(@RequestBody @Valid CreateOrderRequest orderRequest) {
         var orderId = orderService.createOrder(orderRequest);
         return ResponseEntity.ok(SuccessResponse.builder().data("order id: " + orderId).build());
     }

@@ -22,8 +22,8 @@ public class Product extends BaseEntity {
     private BigDecimal price;
 
     @OneToOne(mappedBy = "product",
-        fetch = FetchType.LAZY,
-        cascade = CascadeType.ALL)
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
     private Quantity quantity;
 
     @ManyToOne(fetch = FetchType.LAZY)

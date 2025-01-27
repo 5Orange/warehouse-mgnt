@@ -25,8 +25,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -51,8 +49,8 @@ public class ProductService {
                 .build();
 
         Quantity quantity = Quantity.builder()
-            .value(createProductRequest.getQuantity())
-            .build();
+                .value(createProductRequest.getQuantity())
+                .build();
 
         quantityRepository.save(quantity);
         quantity.setProduct(product);
@@ -67,7 +65,7 @@ public class ProductService {
             throw new BadRequestException("id can not be null!");
         }
         return productRepository.findById(id)
-            .orElseThrow(() -> new NotFoundException("Product not found!"));
+                .orElseThrow(() -> new NotFoundException("Product not found!"));
     }
 
     public PagingResponse<Product> getProducts(MetricSearch metricSearch) {

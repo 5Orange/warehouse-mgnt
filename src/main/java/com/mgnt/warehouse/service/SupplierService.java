@@ -1,13 +1,5 @@
 package com.mgnt.warehouse.service;
 
-import static com.mgnt.warehouse.utils.ServiceUtils.generateSupplierCode;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
 import com.mgnt.warehouse.modal.Supplier;
 import com.mgnt.warehouse.modal.common.MetricFilter;
 import com.mgnt.warehouse.modal.common.MetricSearch;
@@ -20,14 +12,13 @@ import com.mgnt.warehouse.repository.SupplierRepository;
 import com.mgnt.warehouse.utils.ApplicationUtils;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
+import org.springframework.util.CollectionUtils;
 
 import static com.mgnt.warehouse.utils.ServiceUtils.generateSupplierCode;
 

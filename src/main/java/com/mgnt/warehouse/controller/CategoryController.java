@@ -40,8 +40,8 @@ public class CategoryController {
     public ResponseEntity<?> updateCategory(@RequestBody Category category) {
         log.info("update category is calling");
         return ResponseEntity.ok().body(
-            SuccessResponse.builder().data(categoryService.updateCategory(category))
-                .message("Updated").build());
+                SuccessResponse.builder().data(categoryService.updateCategory(category))
+                        .message("Updated").build());
     }
 
     @DeleteMapping("{id}")

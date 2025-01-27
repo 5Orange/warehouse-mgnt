@@ -29,29 +29,29 @@ public class CategoryService {
 
     public PagingResponse<Category> getCategories(MetricSearch metricSearch) {
         return ofNullable(metricSearch)
-            .map(metrics -> {
-                BooleanExpression bExpression = Expressions.asBoolean(true).isTrue();
-                if (metricSearch.getMetricFilters() != null) {
-                    for (MetricFilter filters : metricSearch.getMetricFilters()) {
-                        String value = filters.getValue();
-                        bExpression = switch (filters.getFilterField()) {
-                            case "name" -> CategoryPredicate.categoryNameLike(bExpression, value);
-                            case "categoryCode" -> CategoryPredicate.codeLike(bExpression, value);
-                            default -> bExpression;
-                        };
+                .map(metrics -> {
+                    BooleanExpression bExpression = Expressions.asBoolean(true).isTrue();
+                    if (metricSearch.getMetricFilters() != null) {
+                        for (MetricFilter filters : metricSearch.getMetricFilters()) {
+                            String value = filters.getValue();
+                            bExpression = switch (filters.getFilterField()) {
+                                case "name" -> CategoryPredicate.categoryNameLike(bExpression, value);
+                                case "categoryCode" -> CategoryPredicate.codeLike(bExpression, value);
+                                default -> bExpression;
+                            };
+                        }
                     }
-                }
 
-                Pageable pageable = ApplicationUtils.getPageable(metricSearch);
-                Page<Category> result = categoryRepository.findAll(bExpression, pageable);
-                return new PagingResponse<>(result);
-            }).orElse(null);
+                    Pageable pageable = ApplicationUtils.getPageable(metricSearch);
+                    Page<Category> result = categoryRepository.findAll(bExpression, pageable);
+                    return new PagingResponse<>(result);
+                }).orElse(null);
     }
 
     public Category categoryDetails(String id) {
         return ofNullable(id)
-            .flatMap(i -> categoryRepository.findCategoryById(id))
-            .orElseThrow(() -> new InvalidRequestException("Category not found"));
+                .flatMap(i -> categoryRepository.findCategoryById(id))
+                .orElseThrow(() -> new InvalidRequestException("Category not found"));
     }
 
     public String createNewCategory(Category category) {
@@ -64,13 +64,13 @@ public class CategoryService {
 
     public String updateCategory(Category category) {
         return categoryRepository.findCategoryById(category.getId())
-            .map(c -> {
-                Category target = categoryMapper.toCategory(category);
-                target.setId(c.getId());
-                target.setCreateDate(c.getCreateDate());
-                target.setCreatedBy(c.getCreatedBy());
-                return categoryRepository.save(target).getId();
-            }).orElseThrow(() -> new InvalidRequestException("Category not found"));
+                .map(c -> {
+                    Category target = categoryMapper.toCategory(category);
+                    target.setId(c.getId());
+                    target.setCreateDate(c.getCreateDate());
+                    target.setCreatedBy(c.getCreatedBy());
+                    return categoryRepository.save(target).getId();
+                }).orElseThrow(() -> new InvalidRequestException("Category not found"));
     }
 
     public void deleteCategory(String id) {

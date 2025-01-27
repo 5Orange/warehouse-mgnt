@@ -12,12 +12,12 @@ public class SuccessResponse {
 
     public static SuccessResponse success(String message, Object data) {
         return SuccessResponse.builder()
-            .data(data)
-            .message(message).build();
+                .data(data)
+                .message(message).build();
     }
 
     public static SuccessResponse success(Object data) {
         return SuccessResponse.builder()
-            .data(data).build();
+                .data(data).build();
     }
 }
