@@ -3,6 +3,8 @@ package com.mgnt.warehouse.controller;
 import com.mgnt.warehouse.modal.auth.User;
 import com.mgnt.warehouse.repository.UserRepository;
 import com.mgnt.warehouse.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,14 +31,17 @@ public class UserController {
     @GetMapping("/details/{id}")
     public ResponseEntity<User> getUserDetails(@PathVariable String id) {
         return ofNullable(id)
-            .map(i -> ResponseEntity.ok(userRepository.findUserById(id)))
+            .map(i -> ResponseEntity.ok(userService.findUserById(id)))
             .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<String> removeUser(@RequestParam("id") String id) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> removeUser(@PathVariable("id") String id) {
         return ofNullable(id)
-            .map(i -> ResponseEntity.ok("User deleted: " + userRepository.removeUserById(id)))
+            .map(i -> {
+                userService.inactiveUser(id);
+                return ResponseEntity.accepted().body("Received");
+            })
             .orElse(new ResponseEntity<>("id must not be null", HttpStatus.BAD_REQUEST));
     }
 

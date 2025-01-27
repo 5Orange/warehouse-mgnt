@@ -1,6 +1,7 @@
 package com.mgnt.warehouse.repository;
 
 import com.mgnt.warehouse.modal.auth.User;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,7 +13,9 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     boolean existsByUsernameOrPhoneNumber(String username, String phoneNumber);
 
-    Long removeUserById(String id);
+    @Transactional
+    @Deprecated
+    Long deleteByIdIs(String id);
 
-    User findUserById(String id);
+    Optional<User> findUserById(String id);
 }

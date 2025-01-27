@@ -19,9 +19,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -38,7 +38,10 @@ public class AccountService {
 
     public ResponseEntity<?> createAccount(SignUpRequest signUpRequest) {
         if (userRepository.existsByUsernameOrPhoneNumber(signUpRequest.getUsername(), signUpRequest.getPhoneNumber())) {
-            return ResponseEntity.badRequest().body(ErrorResponse.builder().message("username already exist").build());
+            return ResponseEntity
+                    .badRequest()
+                    .body(ErrorResponse.builder()
+                            .message("User already exist").build());
         }
         User user = signinRequestMapper.toUser(signUpRequest);
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
@@ -46,43 +49,48 @@ public class AccountService {
         Set<String> strRoles = signUpRequest.getRoles();
         Set<Role> roles = new HashSet<>();
 
-        if (strRoles == null) {
+        if (CollectionUtils.isEmpty(strRoles)) {
             Role userRole = roleRepository.findByName(RoleConst.ROLE_USER)
-                .orElseThrow(() -> new RuntimeException(ROLE_NOT_FOUND));
+                    .orElseThrow(() -> new RuntimeException(ROLE_NOT_FOUND));
             roles.add(userRole);
         } else {
             strRoles.forEach(role -> {
-                var r = switch (role) {
+                var r = switch (role.toLowerCase()) {
                     case "admin" -> roleRepository
-                        .findByName(RoleConst.ROLE_ADMIN)
-                        .orElseThrow(() -> new RuntimeException(ROLE_NOT_FOUND));
+                            .findByName(RoleConst.ROLE_ADMIN)
+                            .orElseThrow(() -> new RuntimeException(ROLE_NOT_FOUND));
                     default -> roleRepository
-                        .findByName(RoleConst.ROLE_USER)
-                        .orElseThrow(() -> new RuntimeException(ROLE_NOT_FOUND));
+                            .findByName(RoleConst.ROLE_USER)
+                            .orElseThrow(() -> new RuntimeException(ROLE_NOT_FOUND));
                 };
                 roles.add(r);
-
             });
         }
 
         user.setRoles(roles);
+        user.setActive(true);
         userRepository.save(user);
         return ResponseEntity.ok().body(
-            SuccessResponse.builder().message("User registered successfully!").data(user.getUsername()).build());
+                SuccessResponse.builder().message("User registered successfully!").data(user.getUsername()).build());
     }
 
     public ResponseEntity<?> login(LoginRequest request) {
-        User user = userRepository.findByUsername(request.getUsername()).orElse(null);
-        return Optional.ofNullable(user)
-            .map(u -> {
-                Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                String jwt = jwtService.generateJwtToken(authentication);
-                return ResponseEntity.ok().body(LoginResponse.builder().token(jwt).build());
-            })
-            .orElse(ResponseEntity.badRequest().body(LoginResponse.builder().error("User not found!").build()));
+        return userRepository.findByUsername(request.getUsername())
+                .filter(User::isActive)
+                .map(u -> {
+                    Authentication authentication = authenticationManager.authenticate(
+                            new UsernamePasswordAuthenticationToken(
+                                    request.getUsername(),
+                                    request.getPassword()));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    String jwt = jwtService.generateJwtToken(authentication);
+                    return ResponseEntity.ok().body(LoginResponse.builder().token(jwt).build());
+                })
+                .orElse(ResponseEntity
+                        .badRequest()
+                        .body(LoginResponse.builder()
+                                .error("User not found or your account temporarily disabled. Please reach out to admin ")
+                                .build()));
+
     }
 }

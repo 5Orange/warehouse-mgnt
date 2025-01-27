@@ -1,15 +1,9 @@
 package com.mgnt.warehouse.service;
 
-import com.mgnt.warehouse.modal.BaseEntity;
-import com.mgnt.warehouse.modal.auth.Role;
-import com.mgnt.warehouse.modal.auth.RoleConst;
 import com.mgnt.warehouse.modal.auth.User;
-import com.mgnt.warehouse.repository.RoleRepository;
 import com.mgnt.warehouse.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 
@@ -18,28 +12,32 @@ import static java.util.Optional.ofNullable;
 public class UserService {
     private final UserRepository userRepository;
 
-    private final RoleRepository roleRepository;
-
     public User updateUser(String id, User user) {
-        var userDb = ofNullable(id)
-            .map(userRepository::findUserById)
-            .orElseGet(() -> ofNullable(user)
-                .map(BaseEntity::getId)
-                .map(userRepository::findUserById)
-                .orElse(null));
-        return ofNullable(userDb)
-            .map(u -> {
-                u.setPhoneNumber(user.getPhoneNumber());
-                u.setIndividualCard(user.getIndividualCard());
-                u.setEmail(user.getEmail());
-                u.setFullName(user.getFullName());
-                u.setAddress(user.getAddress());
-                return userRepository.save(u);
-            }).orElse(null);
-
+        String userId = ofNullable(id)
+                .orElseGet(user::getId);
+        return ofNullable(userId)
+                .flatMap(x -> userRepository.findUserById(x)
+                        .map(u -> {
+                            u.setPhoneNumber(user.getPhoneNumber());
+                            u.setIndividualCard(user.getIndividualCard());
+                            u.setEmail(user.getEmail());
+                            u.setFullName(user.getFullName());
+                            u.setAddress(user.getAddress());
+                            return userRepository.save(u);
+                        })
+                ).orElseThrow(() -> new IllegalArgumentException("user not found"));
     }
 
-    public Optional<Role> getRoleByName(RoleConst name) {
-        return roleRepository.findByName(name);
+    public User findUserById(String id) {
+        return ofNullable(id)
+                .flatMap(userRepository::findUserById)
+                .orElseThrow(() -> new IllegalArgumentException("user not found"));
     }
+
+    public void inactiveUser(String id) {
+        var user = this.findUserById(id);
+        user.setActive(!user.isActive());
+        userRepository.save(user);
+    }
+
 }

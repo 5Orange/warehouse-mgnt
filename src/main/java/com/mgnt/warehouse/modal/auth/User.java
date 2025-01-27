@@ -1,5 +1,6 @@
 package com.mgnt.warehouse.modal.auth;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mgnt.warehouse.modal.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -27,6 +28,7 @@ public class User extends BaseEntity {
     private String individualCard;
 
     @NotNull(message = "Password must not be null")
+    @JsonIgnore
     private String password;
 
     @Email(message = "Email Invalid, please try again.")
@@ -45,5 +47,8 @@ public class User extends BaseEntity {
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
+
+    @Column(name = "active")
+    private boolean isActive;
 
 }

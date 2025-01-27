@@ -1,5 +1,6 @@
 package com.mgnt.warehouse.modal.auth;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +19,7 @@ import java.util.Objects;
 public class Role implements GrantedAuthority {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
+    @JsonIgnore
     private long id;
 
     @Enumerated(EnumType.STRING)
