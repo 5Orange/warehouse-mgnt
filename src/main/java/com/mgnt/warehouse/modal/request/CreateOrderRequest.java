@@ -11,7 +11,8 @@ public class CreateOrderRequest {
     private String customerName;
     private String phone;
     private String deliveryAddress;
+    private Long discount;
     @Valid
-    @Size(min = 1, message = "items can not be null.")
-    private List<OrderItemRequest> orderItems;
+    @Size(min = 1, message = "Product can not be null.")
+    private List<OrderProduct> orderProducts;
 }
