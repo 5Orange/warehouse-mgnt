@@ -1,5 +1,6 @@
 package com.mgnt.warehouse.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mgnt.warehouse.modal.Supplier;
 import com.mgnt.warehouse.modal.common.MetricFilter;
 import com.mgnt.warehouse.modal.common.MetricSearch;
@@ -9,7 +10,9 @@ import com.mgnt.warehouse.modal.mapper.SupplierMapper;
 import com.mgnt.warehouse.modal.predicate.SupplierPredicate;
 import com.mgnt.warehouse.modal.response.PagingResponse;
 import com.mgnt.warehouse.repository.SupplierRepository;
+import com.mgnt.warehouse.utils.Action;
 import com.mgnt.warehouse.utils.ApplicationUtils;
+import com.mgnt.warehouse.utils.TraceItem;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import jakarta.transaction.Transactional;
@@ -27,6 +30,8 @@ import static com.mgnt.warehouse.utils.ServiceUtils.generateSupplierCode;
 public class SupplierService {
     private final SupplierRepository supplierRepository;
     private final SupplierMapper supplierMapper;
+    private final TracingService tracingService;
+    private final ObjectMapper objectMapper;
 
     public Supplier getSupplierById(String id) {
         if (id == null) {
@@ -45,7 +50,9 @@ public class SupplierService {
             throw new DuplicateException("Supplier is already existing!");
         }
         supplier.setCode(generateSupplierCode());
-        return supplierRepository.save(supplier).getId();
+        var id = supplierRepository.save(supplier).getId();
+        tracingService.save(Action.CREATE, TraceItem.SUPPLIER, "Create new supplier: " + id);
+        return id;
     }
 
     public PagingResponse<Supplier> getAllSupplier(MetricSearch metricSearch) {
@@ -69,9 +76,13 @@ public class SupplierService {
     }
 
     @Transactional
-    public void updateSuplier(Supplier supplier, String id) {
-        var existsSuplier = this.getSupplierById(id);
-        supplierMapper.update(existsSuplier, supplier);
-        supplierRepository.save(existsSuplier);
+    public void updateSupplier(Supplier supplier, String id) {
+        var existsSupplier = this.getSupplierById(id);
+        tracingService.save(
+                Action.UPDATE,
+                TraceItem.SUPPLIER,
+                String.format("supplier was changed fom : %s to %s", objectMapper.valueToTree(existsSupplier), objectMapper.valueToTree(supplier)));
+        supplierMapper.update(existsSupplier, supplier);
+        supplierRepository.save(existsSupplier);
     }
 }

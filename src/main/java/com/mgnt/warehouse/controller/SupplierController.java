@@ -28,7 +28,7 @@ public class SupplierController {
 
     @PatchMapping("update")
     public ResponseEntity<?> updateSupplier(@RequestBody Supplier supplier, @RequestParam("id") String id) {
-        supplierService.updateSuplier(supplier, id);
+        supplierService.updateSupplier(supplier, id);
         return ResponseEntity.accepted().build();
     }
 

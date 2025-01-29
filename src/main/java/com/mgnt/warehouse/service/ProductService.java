@@ -12,8 +12,10 @@ import com.mgnt.warehouse.modal.request.CreateProductRequest;
 import com.mgnt.warehouse.modal.response.PagingResponse;
 import com.mgnt.warehouse.repository.ProductRepository;
 import com.mgnt.warehouse.repository.QuantityRepository;
+import com.mgnt.warehouse.utils.Action;
 import com.mgnt.warehouse.utils.ApplicationUtils;
 import com.mgnt.warehouse.utils.ServiceUtils;
+import com.mgnt.warehouse.utils.TraceItem;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import jakarta.transaction.Transactional;
@@ -33,6 +35,7 @@ public class ProductService {
     private final QuantityRepository quantityRepository;
     private final SupplierService supplierService;
     private final CategoryService categoryService;
+    private final TracingService tracingService;
 
     @Transactional
     public String createProduct(CreateProductRequest createProductRequest) {
@@ -56,7 +59,9 @@ public class ProductService {
         quantity.setProduct(product);
         product.setQuantity(quantity);
 
-        return productRepository.save(product).getId();
+        var id = productRepository.save(product).getId();
+        tracingService.save(Action.CREATE, TraceItem.PRODUCT, "Create new product: " + id);
+        return id;
     }
 
     @SneakyThrows

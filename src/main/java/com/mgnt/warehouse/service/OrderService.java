@@ -13,11 +13,12 @@ import io.jsonwebtoken.lang.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mgnt.warehouse.utils.Action.CREATE;
 import static com.mgnt.warehouse.utils.ServiceUtils.generateOrderCode;
+import static com.mgnt.warehouse.utils.TraceItem.ORDER;
 import static java.util.Optional.ofNullable;
 
 @Service
@@ -27,6 +28,7 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
     private final OrderRequestMapper orderRequestMapper;
+    private final TracingService tracingService;
     private final ObjectMapper objectMapper;
 
     public String createOrder(CreateOrderRequest request) {
@@ -40,7 +42,6 @@ public class OrderService {
         }
 
         List<Product> productList = new ArrayList<>();
-        BigDecimal totalPrice = BigDecimal.ZERO;
 
         request.getOrderProducts()
                 .forEach(product -> {
@@ -61,7 +62,9 @@ public class OrderService {
         orderEntity.setOrderId(generateOrderCode());
         orderEntity.setProducts(productList);
         orderEntity.setOrderProducts(objectMapper.valueToTree(request.getOrderProducts()));
-        return orderRepository.save(orderEntity).getOrderId();
+        var orderCreated = orderRepository.save(orderEntity).getOrderId();
+        tracingService.save(CREATE, ORDER, "Create new order: " + orderCreated);
+        return orderCreated;
     }
 
     public OrderEntity getOrderById(String orderId) {

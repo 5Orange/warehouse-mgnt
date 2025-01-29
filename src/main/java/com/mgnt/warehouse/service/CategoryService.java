@@ -17,7 +17,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import static com.mgnt.warehouse.utils.Action.CREATE;
+import static com.mgnt.warehouse.utils.Action.UPDATE;
 import static com.mgnt.warehouse.utils.ServiceUtils.generateCategoryCode;
+import static com.mgnt.warehouse.utils.TraceItem.CATEGORY;
 import static java.util.Optional.ofNullable;
 
 @Service
@@ -26,6 +29,7 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
+    private final TracingService tracingService;
 
     public PagingResponse<Category> getCategories(MetricSearch metricSearch) {
         return ofNullable(metricSearch)
@@ -59,12 +63,16 @@ public class CategoryService {
             throw new DuplicateException();
         }
         category.setCategoryCode(generateCategoryCode());
-        return categoryRepository.save(category).getId();
+
+        var categoryId = categoryRepository.save(category).getId();
+        tracingService.save(CREATE, CATEGORY, "Adding new category: " + categoryId);
+        return categoryId;
     }
 
     public String updateCategory(Category category) {
         return categoryRepository.findCategoryById(category.getId())
                 .map(c -> {
+                    tracingService.save(UPDATE, CATEGORY, "Update the category: " + c.getCategoryCode());
                     Category target = categoryMapper.toCategory(category);
                     target.setId(c.getId());
                     target.setCreateDate(c.getCreateDate());
