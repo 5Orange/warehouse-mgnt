@@ -3,7 +3,9 @@ package com.mgnt.warehouse.service;
 import com.mgnt.warehouse.modal.auth.Role;
 import com.mgnt.warehouse.modal.auth.RoleConst;
 import com.mgnt.warehouse.modal.auth.User;
+import com.mgnt.warehouse.modal.exception.InvalidRequestException;
 import com.mgnt.warehouse.modal.mapper.SigninRequestMapper;
+import com.mgnt.warehouse.modal.request.ChangePasswordRequest;
 import com.mgnt.warehouse.modal.request.LoginRequest;
 import com.mgnt.warehouse.modal.request.SignUpRequest;
 import com.mgnt.warehouse.modal.response.ErrorResponse;
@@ -23,6 +25,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -37,14 +40,17 @@ public class AccountService {
     private final JwtService jwtService;
 
     public ResponseEntity<?> createAccount(SignUpRequest signUpRequest) {
-        if (userRepository.existsByUsernameOrPhoneNumber(signUpRequest.getUsername(), signUpRequest.getPhoneNumber())) {
+        if (userRepository.existsByUsernameOrPhoneNumberOrEmail(signUpRequest.getUsername(),
+                signUpRequest.getPhoneNumber(), signUpRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
                     .body(ErrorResponse.builder()
-                            .message("User already exist").build());
+                            .message("User already exist. Email/Username/Phone number should be unique.").build());
         }
         User user = signinRequestMapper.toUser(signUpRequest);
-        user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+        String userKey = UUID.randomUUID().toString();
+        user.setUserKey(userKey);
+        user.setPassword(passwordEncoder.encode(userKey + signUpRequest.getPassword()));
 
         Set<String> strRoles = signUpRequest.getRoles();
         Set<Role> roles = new HashSet<>();
@@ -81,7 +87,7 @@ public class AccountService {
                     Authentication authentication = authenticationManager.authenticate(
                             new UsernamePasswordAuthenticationToken(
                                     request.getUsername(),
-                                    request.getPassword()));
+                                    u.getUserKey() + request.getPassword()));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                     String jwt = jwtService.generateJwtToken(authentication);
                     return ResponseEntity.ok().body(LoginResponse.builder().token(jwt).build());
@@ -91,6 +97,21 @@ public class AccountService {
                         .body(LoginResponse.builder()
                                 .error("User not found or your account temporarily disabled. Please reach out to admin ")
                                 .build()));
+
+    }
+
+    public void changePassword(ChangePasswordRequest request) {
+       var user = userRepository.findByUsername(request.userName()).orElseThrow(() -> new InvalidRequestException("user not found"));
+        var isMatchPassword = passwordEncoder.matches(user.getUserKey() + request.oldPassword(), user.getPassword());
+        if (isMatchPassword) {
+            var newUuid = UUID.randomUUID().toString();
+
+            user.setUserKey(newUuid);
+            user.setPassword(passwordEncoder.encode(newUuid + request.newPassword()));
+            userRepository.save(user);
+        } else {
+            throw new InvalidRequestException("Invalid password");
+        }
 
     }
 }

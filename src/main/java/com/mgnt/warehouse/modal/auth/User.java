@@ -51,4 +51,6 @@ public class User extends BaseEntity {
     @Column(name = "active")
     private boolean isActive;
 
+    private String userKey;
+
 }

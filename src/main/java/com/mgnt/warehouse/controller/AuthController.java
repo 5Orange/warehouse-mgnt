@@ -1,5 +1,6 @@
 package com.mgnt.warehouse.controller;
 
+import com.mgnt.warehouse.modal.request.ChangePasswordRequest;
 import com.mgnt.warehouse.modal.request.LoginRequest;
 import com.mgnt.warehouse.modal.request.SignUpRequest;
 import com.mgnt.warehouse.service.AccountService;
@@ -8,10 +9,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("auth")
@@ -30,5 +28,11 @@ public class AuthController {
     @Operation(summary = "Create new user")
     public ResponseEntity<?> signup(@RequestBody @NotNull @Valid SignUpRequest signUpRequest) {
         return accountService.createAccount(signUpRequest);
+    }
+
+    @PutMapping("change-password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request) {
+        accountService.changePassword(request);
+        return ResponseEntity.accepted().body("Received");
     }
 }
