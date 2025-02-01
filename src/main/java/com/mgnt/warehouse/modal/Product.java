@@ -26,6 +26,8 @@ public class Product extends BaseEntity {
             cascade = CascadeType.ALL)
     private Quantity quantity;
 
+    private String productDescription;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})

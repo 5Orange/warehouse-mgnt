@@ -53,7 +53,7 @@ public class ControllerAdviceHandler {
     @ExceptionHandler({Exception.class})
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public final ResponseEntity<ErrorResponse> applicationException(Exception ex, WebRequest request) {
-        log.error("error", ex);
+        log.error(ex.getMessage());
         return ResponseEntity.badRequest().body(ErrorResponse.builder().message(ex.getLocalizedMessage())
                 .status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }

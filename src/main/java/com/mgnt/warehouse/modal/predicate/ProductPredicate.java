@@ -23,4 +23,12 @@ public class ProductPredicate {
         return expression.and(Q_PRODUCT.supplier.name.contains(value));
     }
 
+    public static BooleanExpression findByProductCodeAndCategoryCodeAndSupplierCode(String productCode,
+                                                                                    String supplierCode,
+                                                                                    String categoryCode) {
+        return Q_PRODUCT.productCode.eq(productCode)
+                .and(Q_PRODUCT.supplier.code.eq(supplierCode))
+                .and(Q_PRODUCT.category.categoryCode.eq(categoryCode));
+    }
+
 }

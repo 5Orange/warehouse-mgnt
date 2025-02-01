@@ -81,13 +81,13 @@ public class AccountService {
     }
 
     public ResponseEntity<?> login(LoginRequest request) {
-        return userRepository.findByUsername(request.getUsername())
+        return userRepository.findByUsername(request.username())
                 .filter(User::isActive)
                 .map(u -> {
                     Authentication authentication = authenticationManager.authenticate(
                             new UsernamePasswordAuthenticationToken(
-                                    request.getUsername(),
-                                    u.getUserKey() + request.getPassword()));
+                                    request.username(),
+                                    u.getUserKey() + request.password()));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                     String jwt = jwtService.generateJwtToken(authentication);
                     return ResponseEntity.ok().body(LoginResponse.builder().token(jwt).build());
