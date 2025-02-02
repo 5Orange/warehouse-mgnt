@@ -2,7 +2,6 @@ package com.mgnt.warehouse.service;
 
 import com.mgnt.warehouse.modal.Category;
 import com.mgnt.warehouse.modal.Product;
-import com.mgnt.warehouse.modal.Quantity;
 import com.mgnt.warehouse.modal.Supplier;
 import com.mgnt.warehouse.modal.common.MetricFilter;
 import com.mgnt.warehouse.modal.common.MetricSearch;
@@ -13,11 +12,10 @@ import com.mgnt.warehouse.modal.request.CreateProductRequest;
 import com.mgnt.warehouse.modal.request.ImportProductEntity;
 import com.mgnt.warehouse.modal.response.PagingResponse;
 import com.mgnt.warehouse.repository.ProductRepository;
-import com.mgnt.warehouse.repository.QuantityRepository;
-import com.mgnt.warehouse.utils.Action;
+import com.mgnt.warehouse.modal.enums.Action;
 import com.mgnt.warehouse.utils.ApplicationUtils;
 import com.mgnt.warehouse.utils.ServiceUtils;
-import com.mgnt.warehouse.utils.TraceItem;
+import com.mgnt.warehouse.modal.enums.TraceItem;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import jakarta.transaction.Transactional;
@@ -36,7 +34,6 @@ import java.util.List;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final QuantityRepository quantityRepository;
     private final SupplierService supplierService;
     private final CategoryService categoryService;
     private final TracingService tracingService;
@@ -53,16 +50,9 @@ public class ProductService {
                 .price(createProductRequest.price())
                 .category(category)
                 .supplier(supplier)
+                .stockQuantity(createProductRequest.quantity())
+                .description(createProductRequest.description())
                 .build();
-
-        Quantity quantity = Quantity.builder()
-                .value(createProductRequest.quantity())
-                .build();
-
-        quantityRepository.save(quantity);
-        quantity.setProduct(product);
-        product.setQuantity(quantity);
-
         var id = productRepository.save(product).getId();
         tracingService.save(Action.CREATE, TraceItem.PRODUCT, "Create new product: " + id);
         return id;
@@ -76,7 +66,7 @@ public class ProductService {
                 throw new InvalidRequestException("Invalid product");
             }
             productIterable.forEach(product -> {
-                product.getQuantity().setValue(item.quantity() + product.getQuantity().getValue());
+                product.setStockQuantity(item.quantity() + product.getStockQuantity());
                 tracingService.save(Action.UPDATE,
                         TraceItem.PRODUCT,
                         String.format("%s %s increased by %s unit(s)", product.getProductCode(), product.getName(), item.quantity()));

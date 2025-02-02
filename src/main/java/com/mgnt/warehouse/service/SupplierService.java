@@ -10,9 +10,9 @@ import com.mgnt.warehouse.modal.mapper.SupplierMapper;
 import com.mgnt.warehouse.modal.predicate.SupplierPredicate;
 import com.mgnt.warehouse.modal.response.PagingResponse;
 import com.mgnt.warehouse.repository.SupplierRepository;
-import com.mgnt.warehouse.utils.Action;
+import com.mgnt.warehouse.modal.enums.Action;
 import com.mgnt.warehouse.utils.ApplicationUtils;
-import com.mgnt.warehouse.utils.TraceItem;
+import com.mgnt.warehouse.modal.enums.TraceItem;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import jakarta.transaction.Transactional;
@@ -49,7 +49,7 @@ public class SupplierService {
         if (supplierRepository.existsByName(supplier.getName())) {
             throw new DuplicateException("Supplier is already existing!");
         }
-        supplier.setCode(generateSupplierCode());
+        supplier.setSupplierCode(generateSupplierCode());
         var id = supplierRepository.save(supplier).getId();
         tracingService.save(Action.CREATE, TraceItem.SUPPLIER, "Create new supplier: " + id);
         return id;

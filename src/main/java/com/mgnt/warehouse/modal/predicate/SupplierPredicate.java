@@ -19,7 +19,7 @@ public class SupplierPredicate {
     }
 
     public static BooleanExpression codeLike(BooleanExpression expression, String value) {
-        return expression.and(Q_SUPPLIER.code.contains(value));
+        return expression.and(Q_SUPPLIER.supplierCode.contains(value));
     }
 
 }

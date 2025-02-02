@@ -27,7 +27,7 @@ public class ProductPredicate {
                                                                                     String supplierCode,
                                                                                     String categoryCode) {
         return Q_PRODUCT.productCode.eq(productCode)
-                .and(Q_PRODUCT.supplier.code.eq(supplierCode))
+                .and(Q_PRODUCT.supplier.supplierCode.eq(supplierCode))
                 .and(Q_PRODUCT.category.categoryCode.eq(categoryCode));
     }
 

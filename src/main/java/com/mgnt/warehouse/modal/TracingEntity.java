@@ -1,7 +1,7 @@
 package com.mgnt.warehouse.modal;
 
-import com.mgnt.warehouse.utils.Action;
-import com.mgnt.warehouse.utils.TraceItem;
+import com.mgnt.warehouse.modal.enums.Action;
+import com.mgnt.warehouse.modal.enums.TraceItem;
 import com.mgnt.warehouse.validate.EnumValidator;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;

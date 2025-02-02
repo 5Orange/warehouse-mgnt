@@ -17,7 +17,7 @@ public class Supplier extends BaseEntity {
     private String name;
     private String phone;
     private String address;
-    private String code;
+    private String supplierCode;
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Product> products;

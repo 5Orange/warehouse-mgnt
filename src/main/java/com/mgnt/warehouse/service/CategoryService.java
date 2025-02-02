@@ -17,10 +17,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import static com.mgnt.warehouse.utils.Action.CREATE;
-import static com.mgnt.warehouse.utils.Action.UPDATE;
+import static com.mgnt.warehouse.modal.enums.Action.CREATE;
+import static com.mgnt.warehouse.modal.enums.Action.UPDATE;
 import static com.mgnt.warehouse.utils.ServiceUtils.generateCategoryCode;
-import static com.mgnt.warehouse.utils.TraceItem.CATEGORY;
+import static com.mgnt.warehouse.modal.enums.TraceItem.CATEGORY;
 import static java.util.Optional.ofNullable;
 
 @Service

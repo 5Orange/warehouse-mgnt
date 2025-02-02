@@ -18,6 +18,8 @@ public class Category extends BaseEntity {
 
     private String categoryCode;
 
+    private String description;
+
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Product> products;

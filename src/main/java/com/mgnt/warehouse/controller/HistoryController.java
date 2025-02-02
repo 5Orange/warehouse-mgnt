@@ -2,7 +2,7 @@ package com.mgnt.warehouse.controller;
 
 import com.mgnt.warehouse.modal.TracingEntity;
 import com.mgnt.warehouse.service.TracingService;
-import com.mgnt.warehouse.utils.TraceItem;
+import com.mgnt.warehouse.modal.enums.TraceItem;
 import com.mgnt.warehouse.validate.EnumValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

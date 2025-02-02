@@ -6,5 +6,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
-public record OrderProduct(@NotNull String productId, @Min(0) Long quantity, @DecimalMin("0.0") BigDecimal price) {
+public record OrderProduct(@NotNull String productId,
+                           @Min(0) Long quantity,
+                           @DecimalMin("0.0") BigDecimal price) {
 }

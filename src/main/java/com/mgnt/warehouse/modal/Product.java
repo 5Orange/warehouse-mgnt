@@ -7,8 +7,9 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
-@EqualsAndHashCode(exclude = {"quantity", "category", "supplier"}, callSuper = false)
+@EqualsAndHashCode(exclude = {"category", "supplier"}, callSuper = false)
 @Entity
 @Builder
 @NoArgsConstructor
@@ -21,12 +22,9 @@ public class Product extends BaseEntity {
 
     private BigDecimal price;
 
-    @OneToOne(mappedBy = "product",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
-    private Quantity quantity;
+    private Long stockQuantity;
 
-    private String productDescription;
+    private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
@@ -38,8 +36,10 @@ public class Product extends BaseEntity {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Supplier supplier;
 
-    @ManyToMany(mappedBy = "products")
+    private String imageUrl;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<OrderEntity> orders;
+    private List<OrderItem> orderItems;
 
 }
