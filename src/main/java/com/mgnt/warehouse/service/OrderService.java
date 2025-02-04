@@ -23,10 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,20 +102,7 @@ public class OrderService {
                         switch (filter.filterField()) {
                             case "customerName" -> expression.customerNameLike(filter.value());
                             case "productCode" -> expression.productContains(filter.value());
-                            case "createDate" -> {
-                                Instant from, to;
-                                if (filter.from() != null) {
-                                    from = ZonedDateTime.of(filter.from(), ZoneId.systemDefault()).toInstant();
-                                } else {
-                                    from = Instant.now().minus(1, ChronoUnit.DAYS);
-                                }
-                                if (filter.to() != null) {
-                                    to = ZonedDateTime.of(filter.to(), ZoneId.systemDefault()).toInstant();
-                                } else {
-                                    to = Instant.now();
-                                }
-                                expression.createDateBetween(from, to);
-                            }
+                            case "createDate" -> expression.createDateBetween(filter.from(), filter.to());
                         }
                     });
         }

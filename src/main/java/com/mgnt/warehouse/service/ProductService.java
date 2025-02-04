@@ -59,7 +59,11 @@ public class ProductService {
     @Transactional
     public void importProduct(List<ImportProductEntity> importProductEntityList) {
         importProductEntityList.forEach(item -> {
-            Iterable<Product> productIterable = productRepository.findAll(ProductPredicate.findByProductCodeAndCategoryCodeAndSupplierCode(item.productCode(), item.supplierCode(), item.categoryCode()));
+            var productExpression = ProductPredicate.builder()
+                    .productCodeEq(item.productCode())
+                    .supplierCodeEq(item.supplierCode())
+                    .categoryCodeEq(item.categoryCode()).build();
+            Iterable<Product> productIterable = productRepository.findAll(productExpression);
             if (!productIterable.iterator().hasNext()) {
                 throw new InvalidRequestException("Invalid product");
             }
@@ -92,6 +96,7 @@ public class ProductService {
                     case "productCode" -> productFilter.productCodeLike(value);
                     case "category" -> productFilter.categoryLike(value);
                     case "supplier" -> productFilter.supplierNameLike(value);
+                    case "createDate" -> productFilter.createDateBetween(filters.from(), filters.to());
                 }
             }
         }

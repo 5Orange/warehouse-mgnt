@@ -4,7 +4,9 @@ import com.mgnt.warehouse.modal.QOrders;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
+
+import static com.mgnt.warehouse.modal.predicate.PredicateUtils.fromDateRange;
 
 public class OrderPredicate {
     public static OrderPredicateBuilder builder() {
@@ -16,16 +18,19 @@ public class OrderPredicate {
         private static final QOrders Q_ORDERS = QOrders.orders;
         private BooleanExpression booleanExpression = Expressions.asBoolean(true).isTrue();
 
-        public void customerNameLike(String value) {
+        public OrderPredicateBuilder customerNameLike(String value) {
             this.booleanExpression = this.booleanExpression.and(Q_ORDERS.customerName.contains(value));
+            return this;
         }
 
-        public void createDateBetween(Instant from, Instant to) {
-            this.booleanExpression = this.booleanExpression.and(Q_ORDERS.createDate.between(from, to));
+        public OrderPredicateBuilder createDateBetween(LocalDateTime fromDate, LocalDateTime toDate) {
+            this.booleanExpression = this.booleanExpression.and(fromDateRange(Q_ORDERS.createDate, fromDate, toDate));
+            return this;
         }
 
-        public void productContains(String productCode) {
+        public OrderPredicateBuilder productContains(String productCode) {
             this.booleanExpression = this.booleanExpression.and(Q_ORDERS.orderItems.any().product.productCode.eq(productCode));
+            return this;
         }
 
         public BooleanExpression build() {

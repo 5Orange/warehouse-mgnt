@@ -64,6 +64,7 @@ public class SupplierService {
                     case "phone" -> supplierFilter.supplierPhoneLike(value);
                     case "address" -> supplierFilter.addressLike(value);
                     case "code" -> supplierFilter.codeLike(value);
+                    case "createDate" -> supplierFilter.createDateBetween(filters.from(), filters.to());
                 }
             }
         }

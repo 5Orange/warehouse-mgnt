@@ -4,6 +4,10 @@ import com.mgnt.warehouse.modal.QSupplier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 
+import java.time.LocalDateTime;
+
+import static com.mgnt.warehouse.modal.predicate.PredicateUtils.fromDateRange;
+
 public class SupplierPredicate {
     public static SupplierPredicateBuilder builder() {
         return new SupplierPredicateBuilder();
@@ -14,20 +18,29 @@ public class SupplierPredicate {
 
         private BooleanExpression supplierFilter = Expressions.asBoolean(true).isTrue();
 
-        public void supplierNameLike(String value) {
+        public SupplierPredicateBuilder supplierNameLike(String value) {
             this.supplierFilter = supplierFilter.and(Q_SUPPLIER.name.contains(value));
+            return this;
         }
 
-        public void supplierPhoneLike(String value) {
+        public SupplierPredicateBuilder supplierPhoneLike(String value) {
             this.supplierFilter = supplierFilter.and(Q_SUPPLIER.phone.contains(value));
+            return this;
         }
 
-        public void addressLike(String value) {
+        public SupplierPredicateBuilder addressLike(String value) {
             this.supplierFilter = supplierFilter.and(Q_SUPPLIER.address.contains(value));
+            return this;
         }
 
-        public void codeLike(String value) {
+        public SupplierPredicateBuilder codeLike(String value) {
             this.supplierFilter = supplierFilter.and(Q_SUPPLIER.supplierCode.contains(value));
+            return this;
+        }
+
+        public SupplierPredicateBuilder createDateBetween(LocalDateTime fromDate, LocalDateTime toDate) {
+            this.supplierFilter = this.supplierFilter.and(fromDateRange(Q_SUPPLIER.createDate, fromDate, toDate));
+            return this;
         }
 
         public BooleanExpression build() {

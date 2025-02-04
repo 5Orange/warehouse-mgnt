@@ -39,6 +39,8 @@ public class CategoryService {
                             switch (filters.filterField()) {
                                 case "name" -> categoryPredicateBuilder.categoryNameLike(value);
                                 case "categoryCode" -> categoryPredicateBuilder.codeLike(value);
+                                case "createDate" ->
+                                        categoryPredicateBuilder.createDateBetween(filters.from(), filters.to());
                             }
                         }
                     }
