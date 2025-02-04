@@ -5,6 +5,8 @@ import com.mgnt.warehouse.modal.Product;
 import com.mgnt.warehouse.modal.Supplier;
 import com.mgnt.warehouse.modal.common.MetricFilter;
 import com.mgnt.warehouse.modal.common.MetricSearch;
+import com.mgnt.warehouse.modal.enums.Action;
+import com.mgnt.warehouse.modal.enums.TraceItem;
 import com.mgnt.warehouse.modal.exception.InvalidRequestException;
 import com.mgnt.warehouse.modal.exception.NotFoundException;
 import com.mgnt.warehouse.modal.predicate.ProductPredicate;
@@ -12,12 +14,8 @@ import com.mgnt.warehouse.modal.request.CreateProductRequest;
 import com.mgnt.warehouse.modal.request.ImportProductEntity;
 import com.mgnt.warehouse.modal.response.PagingResponse;
 import com.mgnt.warehouse.repository.ProductRepository;
-import com.mgnt.warehouse.modal.enums.Action;
 import com.mgnt.warehouse.utils.ApplicationUtils;
 import com.mgnt.warehouse.utils.ServiceUtils;
-import com.mgnt.warehouse.modal.enums.TraceItem;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -85,22 +83,20 @@ public class ProductService {
     }
 
     public PagingResponse<Product> getProducts(MetricSearch metricSearch) {
-        BooleanExpression productFilter = Expressions.asBoolean(true).isTrue();
-
-        if (!CollectionUtils.isEmpty(metricSearch.getMetricFilters())) {
-            for (MetricFilter filters : metricSearch.getMetricFilters()) {
-                String value = filters.getValue();
-                productFilter = switch (filters.getFilterField()) {
-                    case "name" -> ProductPredicate.productNameLike(productFilter, value);
-                    case "productCode" -> ProductPredicate.productCodeLike(productFilter, value);
-                    case "category" -> ProductPredicate.categoryLike(productFilter, value);
-                    case "supplier" -> ProductPredicate.supplierNameLike(productFilter, value);
-                    default -> productFilter;
-                };
+        ProductPredicate.ProductPredicateBuilder productFilter = ProductPredicate.builder();
+        if (!CollectionUtils.isEmpty(metricSearch.metricFilters())) {
+            for (MetricFilter filters : metricSearch.metricFilters()) {
+                String value = filters.value();
+                switch (filters.filterField()) {
+                    case "name" -> productFilter.productNameLike(value);
+                    case "productCode" -> productFilter.productCodeLike(value);
+                    case "category" -> productFilter.categoryLike(value);
+                    case "supplier" -> productFilter.supplierNameLike(value);
+                }
             }
         }
         Pageable pageable = ApplicationUtils.getPageable(metricSearch);
-        Page<Product> products = productRepository.findAll(productFilter, pageable);
+        Page<Product> products = productRepository.findAll(productFilter.build(), pageable);
         return new PagingResponse<>(products);
     }
 }

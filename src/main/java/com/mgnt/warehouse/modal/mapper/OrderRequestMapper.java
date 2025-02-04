@@ -1,7 +1,6 @@
 package com.mgnt.warehouse.modal.mapper;
 
 import com.mgnt.warehouse.modal.OrderItem;
-import com.mgnt.warehouse.modal.request.CreateOrderRequest;
 import com.mgnt.warehouse.modal.request.OrderProduct;
 import org.mapstruct.Mapper;
 

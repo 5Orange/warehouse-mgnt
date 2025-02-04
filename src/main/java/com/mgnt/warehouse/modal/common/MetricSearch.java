@@ -1,17 +1,9 @@
 package com.mgnt.warehouse.modal.common;
 
-import lombok.Data;
-
 import java.util.List;
 
-@Data
-public class MetricSearch {
-    private String sortField;
-    private Boolean desc;
-    private Integer pageSize;
-    private Integer pageNumber;
-
-    private List<MetricFilter> metricFilters;
+public record MetricSearch(String sortField, Boolean desc, Integer pageSize, Integer pageNumber,
+                           List<MetricFilter> metricFilters) {
 
     public Integer getPageSize() {
         return this.pageSize == null || this.pageSize.equals(0) ? 10 : this.pageSize;

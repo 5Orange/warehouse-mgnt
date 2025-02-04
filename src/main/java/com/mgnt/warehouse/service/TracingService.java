@@ -1,9 +1,9 @@
 package com.mgnt.warehouse.service;
 
 import com.mgnt.warehouse.modal.TracingEntity;
-import com.mgnt.warehouse.repository.TracingRepository;
 import com.mgnt.warehouse.modal.enums.Action;
 import com.mgnt.warehouse.modal.enums.TraceItem;
+import com.mgnt.warehouse.repository.TracingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

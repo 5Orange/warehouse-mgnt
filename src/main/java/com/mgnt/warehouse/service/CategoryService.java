@@ -10,8 +10,6 @@ import com.mgnt.warehouse.modal.predicate.CategoryPredicate;
 import com.mgnt.warehouse.modal.response.PagingResponse;
 import com.mgnt.warehouse.repository.CategoryRepository;
 import com.mgnt.warehouse.utils.ApplicationUtils;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,8 +17,8 @@ import org.springframework.stereotype.Service;
 
 import static com.mgnt.warehouse.modal.enums.Action.CREATE;
 import static com.mgnt.warehouse.modal.enums.Action.UPDATE;
-import static com.mgnt.warehouse.utils.ServiceUtils.generateCategoryCode;
 import static com.mgnt.warehouse.modal.enums.TraceItem.CATEGORY;
+import static com.mgnt.warehouse.utils.ServiceUtils.generateCategoryCode;
 import static java.util.Optional.ofNullable;
 
 @Service
@@ -34,20 +32,19 @@ public class CategoryService {
     public PagingResponse<Category> getCategories(MetricSearch metricSearch) {
         return ofNullable(metricSearch)
                 .map(metrics -> {
-                    BooleanExpression bExpression = Expressions.asBoolean(true).isTrue();
-                    if (metricSearch.getMetricFilters() != null) {
-                        for (MetricFilter filters : metricSearch.getMetricFilters()) {
-                            String value = filters.getValue();
-                            bExpression = switch (filters.getFilterField()) {
-                                case "name" -> CategoryPredicate.categoryNameLike(bExpression, value);
-                                case "categoryCode" -> CategoryPredicate.codeLike(bExpression, value);
-                                default -> bExpression;
-                            };
+                    CategoryPredicate.CategoryPredicateBuilder categoryPredicateBuilder = CategoryPredicate.builder();
+                    if (metricSearch.metricFilters() != null) {
+                        for (MetricFilter filters : metricSearch.metricFilters()) {
+                            String value = filters.value();
+                            switch (filters.filterField()) {
+                                case "name" -> categoryPredicateBuilder.categoryNameLike(value);
+                                case "categoryCode" -> categoryPredicateBuilder.codeLike(value);
+                            }
                         }
                     }
 
                     Pageable pageable = ApplicationUtils.getPageable(metricSearch);
-                    Page<Category> result = categoryRepository.findAll(bExpression, pageable);
+                    Page<Category> result = categoryRepository.findAll(categoryPredicateBuilder.build(), pageable);
                     return new PagingResponse<>(result);
                 }).orElse(null);
     }

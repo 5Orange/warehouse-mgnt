@@ -10,12 +10,12 @@ public class ApplicationUtils {
 
     public static Pageable getPageable(MetricSearch metricSearch) {
 
-        if (StringUtils.isEmpty(metricSearch.getSortField())) {
+        if (StringUtils.isEmpty(metricSearch.sortField())) {
             return PageRequest.of(metricSearch.getPageNumber(), metricSearch.getPageSize());
         } else {
             return PageRequest.of(metricSearch.getPageNumber(), metricSearch.getPageSize(),
-                    metricSearch.getDesc() == null ? Direction.ASC : Direction.DESC,
-                    metricSearch.getSortField());
+                    metricSearch.desc() == null ? Direction.ASC : Direction.DESC,
+                    metricSearch.sortField());
         }
     }
 

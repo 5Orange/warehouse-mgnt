@@ -4,17 +4,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mgnt.warehouse.modal.Supplier;
 import com.mgnt.warehouse.modal.common.MetricFilter;
 import com.mgnt.warehouse.modal.common.MetricSearch;
+import com.mgnt.warehouse.modal.enums.Action;
+import com.mgnt.warehouse.modal.enums.TraceItem;
 import com.mgnt.warehouse.modal.exception.DuplicateException;
 import com.mgnt.warehouse.modal.exception.InvalidRequestException;
 import com.mgnt.warehouse.modal.mapper.SupplierMapper;
 import com.mgnt.warehouse.modal.predicate.SupplierPredicate;
 import com.mgnt.warehouse.modal.response.PagingResponse;
 import com.mgnt.warehouse.repository.SupplierRepository;
-import com.mgnt.warehouse.modal.enums.Action;
 import com.mgnt.warehouse.utils.ApplicationUtils;
-import com.mgnt.warehouse.modal.enums.TraceItem;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -56,22 +54,21 @@ public class SupplierService {
     }
 
     public PagingResponse<Supplier> getAllSupplier(MetricSearch metricSearch) {
-        BooleanExpression supplierFilter = Expressions.asBoolean(true).isTrue();
+        SupplierPredicate.SupplierPredicateBuilder supplierFilter = SupplierPredicate.builder();
 
-        if (!CollectionUtils.isEmpty(metricSearch.getMetricFilters())) {
-            for (MetricFilter filters : metricSearch.getMetricFilters()) {
-                String value = filters.getValue();
-                supplierFilter = switch (filters.getFilterField()) {
-                    case "name" -> SupplierPredicate.supplierNameLike(supplierFilter, value);
-                    case "phone" -> SupplierPredicate.supplierPhoneLike(supplierFilter, value);
-                    case "address" -> SupplierPredicate.addressLike(supplierFilter, value);
-                    case "code" -> SupplierPredicate.codeLike(supplierFilter, value);
-                    default -> supplierFilter;
-                };
+        if (!CollectionUtils.isEmpty(metricSearch.metricFilters())) {
+            for (MetricFilter filters : metricSearch.metricFilters()) {
+                String value = filters.value();
+                switch (filters.filterField()) {
+                    case "name" -> supplierFilter.supplierNameLike(value);
+                    case "phone" -> supplierFilter.supplierPhoneLike(value);
+                    case "address" -> supplierFilter.addressLike(value);
+                    case "code" -> supplierFilter.codeLike(value);
+                }
             }
         }
         Pageable pageable = ApplicationUtils.getPageable(metricSearch);
-        Page<Supplier> products = supplierRepository.findAll(supplierFilter, pageable);
+        Page<Supplier> products = supplierRepository.findAll(supplierFilter.build(), pageable);
         return new PagingResponse<>(products);
     }
 

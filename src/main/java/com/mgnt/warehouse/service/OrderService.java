@@ -2,19 +2,31 @@ package com.mgnt.warehouse.service;
 
 import com.mgnt.warehouse.modal.OrderItem;
 import com.mgnt.warehouse.modal.Orders;
+import com.mgnt.warehouse.modal.common.MetricSearch;
 import com.mgnt.warehouse.modal.enums.OrderStatus;
 import com.mgnt.warehouse.modal.exception.InvalidRequestException;
 import com.mgnt.warehouse.modal.mapper.OrderRequestMapper;
+import com.mgnt.warehouse.modal.predicate.OrderPredicate;
 import com.mgnt.warehouse.modal.request.CreateOrderRequest;
 import com.mgnt.warehouse.modal.request.OrderProduct;
+import com.mgnt.warehouse.modal.response.PagingResponse;
 import com.mgnt.warehouse.repository.OrderRepository;
 import com.mgnt.warehouse.repository.ProductRepository;
+import com.mgnt.warehouse.utils.ApplicationUtils;
 import io.jsonwebtoken.lang.Collections;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,5 +96,38 @@ public class OrderService {
         return ofNullable(orderId)
                 .flatMap(orderRepository::findOrderEntityByOrderId)
                 .orElseThrow(InvalidRequestException::new);
+    }
+
+    public PagingResponse<Orders> getListOrder(MetricSearch metricSearch) {
+        OrderPredicate.OrderPredicateBuilder expression = OrderPredicate.builder();
+        if (metricSearch != null && !CollectionUtils.isEmpty(metricSearch.metricFilters())) {
+            metricSearch.metricFilters()
+                    .forEach(filter -> {
+                        switch (filter.filterField()) {
+                            case "customerName" -> expression.customerNameLike(filter.value());
+                            case "productCode" -> expression.productContains(filter.value());
+                            case "createDate" -> {
+                                Instant from, to;
+                                if (filter.from() != null) {
+                                    from = ZonedDateTime.of(filter.from(), ZoneId.systemDefault()).toInstant();
+                                } else {
+                                    from = Instant.now().minus(1, ChronoUnit.DAYS);
+                                }
+                                if (filter.to() != null) {
+                                    to = ZonedDateTime.of(filter.to(), ZoneId.systemDefault()).toInstant();
+                                } else {
+                                    to = Instant.now();
+                                }
+                                expression.createDateBetween(from, to);
+                            }
+                        }
+                    });
+        }
+
+        Pageable pageable = metricSearch == null
+                ? PageRequest.of(0, 10)
+                : ApplicationUtils.getPageable(metricSearch);
+        Page<Orders> orders = orderRepository.findAll(expression.build(), pageable);
+        return new PagingResponse<>(orders);
     }
 }

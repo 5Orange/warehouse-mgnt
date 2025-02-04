@@ -101,7 +101,7 @@ public class AccountService {
     }
 
     public void changePassword(ChangePasswordRequest request) {
-       var user = userRepository.findByUsername(request.userName()).orElseThrow(() -> new InvalidRequestException("user not found"));
+        var user = userRepository.findByUsername(request.userName()).orElseThrow(() -> new InvalidRequestException("user not found"));
         var isMatchPassword = passwordEncoder.matches(user.getUserKey() + request.oldPassword(), user.getPassword());
         if (isMatchPassword) {
             var newUuid = UUID.randomUUID().toString();
