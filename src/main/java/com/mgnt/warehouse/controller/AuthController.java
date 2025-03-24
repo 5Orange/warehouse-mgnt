@@ -35,4 +35,10 @@ public class AuthController {
         accountService.changePassword(request);
         return ResponseEntity.accepted().body("Received");
     }
+
+    @GetMapping("profile")
+    @Operation(summary = "Get user profile based on token")
+    public ResponseEntity<?> getUserProfile() {
+        return ResponseEntity.ok(accountService.getUserProfile());
+    }
 }
