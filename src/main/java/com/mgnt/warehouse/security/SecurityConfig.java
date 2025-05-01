@@ -77,7 +77,7 @@ public class SecurityConfig {
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(request ->
                         request.requestMatchers(FREE_ACCESS).permitAll()
-                                .requestMatchers("/user/**", "/order/**", "/history/**").permitAll()
+                                .requestMatchers("/user/**", "/order/**", "/history/**", "/image/*").permitAll()
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .anyRequest().authenticated());
         httpSecurity.authenticationManager(authenticationManager());
