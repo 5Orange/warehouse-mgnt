@@ -3,6 +3,7 @@ package com.mgnt.warehouse.service;
 import com.mgnt.warehouse.modal.auth.Role;
 import com.mgnt.warehouse.modal.auth.RoleConst;
 import com.mgnt.warehouse.modal.auth.User;
+import com.mgnt.warehouse.modal.auth.UserPrinciple; // Ensure this import is correct
 import com.mgnt.warehouse.modal.exception.InvalidRequestException;
 import com.mgnt.warehouse.modal.mapper.SigninRequestMapper;
 import com.mgnt.warehouse.modal.request.ChangePasswordRequest;
@@ -113,5 +114,21 @@ public class AccountService {
             throw new InvalidRequestException("Invalid password");
         }
 
+    }
+
+    public User getUserProfile() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new InvalidRequestException("User is not authenticated");
+        }
+
+        Object principal = authentication.getPrincipal();
+        if (!(principal instanceof UserPrinciple)) {
+            throw new InvalidRequestException("Invalid authentication principal");
+        }
+
+        var userPrinciple = (UserPrinciple) principal;
+        return userRepository.findByUsername(userPrinciple.getUsername())
+                .orElseThrow(() -> new InvalidRequestException("User not found"));
     }
 }
